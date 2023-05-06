@@ -12,12 +12,19 @@ export const Header = () => {
     const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
 
+    const [search, setSearch] = useState('');
     const [hiddenUserList, setHiddenUserList] = useState(true);
+
+    const searchHeader = (value) => {
+        setSearch(value);
+    }
 
     const onClickHiddenUserList = () => {
         if (hiddenUserList) {
+            console.log(false)
             setHiddenUserList(false);
         } else {
+            console.log(true)
             setHiddenUserList(true);
         }
     }
@@ -78,9 +85,12 @@ export const Header = () => {
                             <div className={"position-relative w-56 mr-2"}>
                                 <input
                                     className={"w-full h-8 pr-4 pl-8 rounded-lg bg-gray-100 focus:outline-none placeholder-gray-500"}
+                                    value={search} onChange={(e) => searchHeader(e.target.value)}
                                     type={"text"} placeholder={"Поиск"}/>
-                                <div className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
-                                    <svg className={"w-4 h-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                <div
+                                    className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
+                                    <svg className={"w-4 h-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
+                                         fill="none" viewBox="0 0 24 24"
                                          stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                               d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
@@ -88,83 +98,94 @@ export const Header = () => {
                                 </div>
                             </div>
                             {/*Notifications*/}
-                            <div className={"hover:bg-gray-100 w-12 h-12 flex justify-content-center align-items-center cursor-pointer"} style={{height:49}}>
-                                <svg className={"w-6 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            <div
+                                className={"hover:bg-gray-100 w-12 h-12 flex justify-content-center align-items-center cursor-pointer"}
+                                style={{height: 49}}>
+                                <svg className={"w-6 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none"
+                                     viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                           d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
                                 </svg>
                             </div>
                         </div>
-                        <div>
-                            {/*User*/}
-                            <div onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
-                                <div className={"flex align-items-center px-3 hover:bg-gray-100 h-12"} style={{height:49}}>
-                                    <div className={"font-medium text-truncate overflow-hidden"} style={{maxWidth: "10rem"}}>
-                                        {/*{userData.userName}*/}
-                                    </div>
-                                    <div className={"mx-2"}>
-                                        <div className="w-8 h-8 rounded-full overflow-hidden">
-                                            <img
-                                                className="object-cover w-full h-full"
-                                                src={userData && userData.avatarUrl ? userData.avatarUrl : "/ui/profile/noAvatar.png"}
-                                                alt="User avatar"
-                                            />
+                        {/*User*/}
+                        {isAuth ?
+                            (
+                                <div onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
+                                    <div className={"flex align-items-center px-3 hover:bg-gray-100 h-12"}
+                                         style={{height: 49}}>
+                                        <div className={"mx-2"}>
+                                            <div className="w-8 h-8 rounded-full overflow-hidden">
+                                                <img
+                                                    className="object-cover w-full h-full"
+                                                    src={userData && userData.avatarUrl ? userData.avatarUrl : "/ui/profile/noAvatar.png"}
+                                                    alt="User avatar"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className={"mx-2 flex-shrink-0"}>
+                                            <svg className={"w-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                            </svg>
                                         </div>
                                     </div>
-                                    <div className={"mx-2 flex-shrink-0"}>
-                                        <svg className={"w-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                                        </svg>
+                                    {/*DropDown*/}
+                                    <div className={`${!hiddenUserList ? 'show' : 'hidden'}`}>
+                                        <div
+                                            className={`absolute top-full right-0`}>
+                                            <div className={"bg-white border w-52 py-1 f"}>
+                                                <Link to="/profile"
+                                                      className={"flex align-items-center px-3 py-1 hover:bg-gray-100 text-decoration-none"}>
+                                                    <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
+                                                        <img
+                                                            className="object-cover w-full h-full"
+                                                            src={userData && userData.avatarUrl ? userData.avatarUrl : "/ui/profile/noAvatar.png"}
+                                                            alt="User avatar"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <div className={"text-truncate overflow-hidden text-blue-900"}>
+                                                            {userData.userName}
+                                                        </div>
+                                                        <div className={"text-gray-500 text-xs"}>
+                                                            Перейти в VK Connect
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                                <div className={"bg-gray-200 h-px mx-3 my-1"}/>
+                                                <Link
+                                                    className={"flex align-items-center justify-content-center px-3 py-1 hover:bg-gray-100 text-decoration-none text-blue-900"}
+                                                    onClick={() => onClickLogout()}>
+                                                    Выйти из аккаунта
+                                                </Link>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                {/*DropDown*/}
-                                {/*<div className={"absolute t-full r-0"}>*/}
-                                {/*    <div className={"bg-white border"}>*/}
-                                {/*        dropdown*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                                {/*<div className={`overlay animated ${!hiddenUserList ? 'show' : ''}`}>*/}
-                                {/*    <div className="modal">*/}
-                                {/*        <svg height="200" viewBox="0 0 200 200" width="200" onClick={() => setHiddenUserList(true)}>*/}
-                                {/*            <title/>*/}
-                                {/*            <path*/}
-                                {/*                d="M114,100l49-49a9.9,9.9,0,0,0-14-14L100,86,51,37A9.9,9.9,0,0,0,37,51l49,49L37,149a9.9,9.9,0,0,0,14,14l49-49,49,49a9.9,9.9,0,0,0,14-14Z"/>*/}
-                                {/*        </svg>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                                {/*{isAuth ? (*/}
-                                {/*  <>*/}
-                                {/*    <Link to="/profile" style={{ textDecoration: "none" }}>*/}
-                                {/*      <MenuItem key="profile" onClick={handleCloseUserMenu}>*/}
-                                {/*        <Typography textAlign="center">Профиль</Typography>*/}
-                                {/*      </MenuItem>*/}
-                                {/*    </Link>*/}
-                                {/*    <Link onClick={() => onClickLogout()} style={{ textDecoration: "none" }}>*/}
-                                {/*      <MenuItem key="logout" onClick={handleCloseUserMenu}>*/}
-                                {/*        <Typography textAlign="center">Выйти</Typography>*/}
-                                {/*      </MenuItem>*/}
-                                {/*    </Link>*/}
-                                {/*  </>*/}
-                                {/*) : (*/}
-                                {/*  <>*/}
-                                {/*    <Link to="/login" style={{ textDecoration: "none" }}>*/}
-                                {/*      <MenuItem key="login" onClick={handleCloseUserMenu}>*/}
-                                {/*        <Typography textAlign="center">Войти</Typography>*/}
-                                {/*      </MenuItem>*/}
-                                {/*    </Link>*/}
-                                {/*    <Link to="/registration" style={{ textDecoration: "none" }}>*/}
-                                {/*      <MenuItem key="registration" onClick={handleCloseUserMenu}>*/}
-                                {/*        <Typography textAlign="center">Создать аккаунт</Typography>*/}
-                                {/*      </MenuItem>*/}
-                                {/*    </Link>*/}
-                                {/*  </>*/}
-                                {/*)}*/}
-                            </div>
-                        </div>
+                            ) : (
+                                <div className={"flex align-items-center"}>
+                                    <div className={"flex align-items-center font-medium hover:bg-gray-100"}
+                                         style={{height: 49}}>
+                                        <Link to="/login"
+                                              className={"mx-2 block focus:outline-none"}
+                                        >
+                                            Войти
+                                        </Link>
+                                    </div>
+                                    <div className={"flex align-items-center font-medium hover:bg-gray-100"}
+                                         style={{height: 49}}>
+                                        <Link to="/registration"
+                                              className={"mx-2 block focus:outline-none"}
+                                        >
+                                            Создать аккаунт
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
                     </div>
                 </div>
             </header>

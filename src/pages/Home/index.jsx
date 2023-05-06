@@ -22,7 +22,7 @@ export const Home = () => {
 
 
   return (
-    <div className="container mx-auto" style={{maxWidth: 970}}>
+    <div className="container mx-auto my-5" style={{maxWidth: 970}}>
       {/*<Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">*/}
       {/*  <Tab label="Новые посты" />*/}
       {/*  <Tab label="Популярные посты" />*/}
