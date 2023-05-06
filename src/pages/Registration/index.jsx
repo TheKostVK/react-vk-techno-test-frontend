@@ -81,7 +81,7 @@ export const Registration = () => {
         Создание аккаунта
       </Typography>
       <div className={styles.avatar}>
-        <img style={{ width: 100, height: 100 }} className={styles.avatar} src={avatarUrl || "/noavatar.png"}
+        <img style={{ width: 100, height: 100 }} className={styles.avatar} src={avatarUrl || "/ui/profile/noavatar.png"}
              alt="Аватар" />
       </div>
       <div className={styles.avatar}>
