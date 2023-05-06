@@ -137,7 +137,7 @@ export const Header = () => {
                                     <div className={`${!hiddenUserList ? 'show' : 'hidden'}`}>
                                         <div
                                             className={`absolute top-full right-0`}>
-                                            <div className={"bg-white border w-52 py-1 f"}>
+                                            <div className={"bg-white border w-52 py-1 rounded"}>
                                                 <Link to="/profile"
                                                       className={"flex align-items-center px-3 py-1 hover:bg-gray-100 text-decoration-none"}>
                                                     <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
@@ -167,7 +167,7 @@ export const Header = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className={"flex align-items-center"}>
+                                <div className={"flex align-items-center rounded"}>
                                     <div className={"flex align-items-center font-medium hover:bg-gray-100"}
                                          style={{height: 49}}>
                                         <Link to="/login"

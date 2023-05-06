@@ -27,7 +27,7 @@ export const Profile = () => {
 
   return (
     <>
-      <section style={{ backgroundColor: "#eee", maxWidth: 911 }}>
+      <section style={{ backgroundColor: "#eee" }}>
         <div className="container py-5">
           <div className="row">
             <div className="col-lg-4">

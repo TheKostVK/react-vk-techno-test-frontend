@@ -9,6 +9,7 @@ import {Navigate} from "react-router-dom";
 
 import styles from "./Login.module.scss";
 import {fetchAuth, selectIsAuth} from "../../redux/slices/auth";
+
 export const Login = () => {
     const isAuth = useSelector(selectIsAuth);
     const dispatch = useDispatch();
@@ -33,9 +34,9 @@ export const Login = () => {
         }
     };
 
-    if (isAuth) {
-        return <Navigate to={'/'}/>
-    };
+    if (window.localStorage.getItem("token") && isAuth) {
+        return <Navigate to={"/"}/>;
+    }
 
     return (
         <Paper classes={{root: styles.root}}>
