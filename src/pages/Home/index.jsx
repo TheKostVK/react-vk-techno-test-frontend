@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Post } from "../../components/Post";
 import { fetchPosts } from "../../redux/slices/posts";
-import { Link } from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import Button from "@mui/material/Button";
 import { selectIsAuth } from "../../redux/slices/auth";
 import styles from "../FullPost/FullPost.module.scss";
@@ -18,11 +18,15 @@ export const Home = () => {
 
   React.useEffect(() => {
     dispatch(fetchPosts());
-  }, []);
+  }, [dispatch]);
+
+  if (!window.localStorage.getItem("token") && !isAuth) {
+    return <Navigate to={"/login"}/>;
+  }
 
 
   return (
-    <div className="container mx-auto my-5" style={{maxWidth: 970}}>
+    <div className="container mx-auto my-5" style={{maxWidth: 911}}>
       {/*<Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">*/}
       {/*  <Tab label="Новые посты" />*/}
       {/*  <Tab label="Популярные посты" />*/}

@@ -39,7 +39,7 @@ export const Header = () => {
     return (
         <>
             <header className={"bg-white border-bottom"}>
-                <div className={"container mx-auto"} style={{maxWidth: 970}}>
+                <div className={"container mx-auto"} style={{maxWidth: 1106}}>
                     <div className={"flex align-items-center justify-content-between"} style={{height: 50}}>
                         <div className={"flex align-items-center"}>
                             {/*Logo*/}
@@ -82,7 +82,7 @@ export const Header = () => {
                                 </svg>
                             </Link>
                             {/*Input*/}
-                            <div className={"position-relative w-56 mr-2"}>
+                            <div className={"position-relative w-56 mr-2 hidden md:grid"}>
                                 <input
                                     className={"w-full h-8 pr-4 pl-8 rounded-lg bg-gray-100 focus:outline-none placeholder-gray-500"}
                                     value={search} onChange={(e) => searchHeader(e.target.value)}
@@ -99,7 +99,7 @@ export const Header = () => {
                             </div>
                             {/*Notifications*/}
                             <div
-                                className={"hover:bg-gray-100 w-12 h-12 flex justify-content-center align-items-center cursor-pointer"}
+                                className={"hover:bg-gray-100 w-12 h-12 flex justify-content-center align-items-center cursor-pointer hidden md:grid"}
                                 style={{height: 49}}>
                                 <svg className={"w-6 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24"
@@ -113,7 +113,7 @@ export const Header = () => {
                         {isAuth ?
                             (
                                 <div onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
-                                    <div className={"flex align-items-center px-3 hover:bg-gray-100 h-12"}
+                                    <div className={"flex align-items-center hover:bg-gray-100 h-12"}
                                          style={{height: 49}}>
                                         <div className={"mx-2"}>
                                             <div className="w-8 h-8 rounded-full overflow-hidden">

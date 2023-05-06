@@ -9,3 +9,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F5F5F5 !important;
 }
+
+
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999; /* только если есть другие элементы с более высоким z-index */
+}
