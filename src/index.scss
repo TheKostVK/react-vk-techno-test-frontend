@@ -2,12 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] {
+  display: none;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Roboto';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #F5F5F5 !important;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  text-base {
+    font-size: .8rem;
+  }
+  text-sm {
+    font-size: .7rem;
+  }
+  text-lg {
+    font-size: 1rem;
+  }
 
 }
 

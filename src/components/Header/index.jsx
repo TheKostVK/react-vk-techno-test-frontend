@@ -21,10 +21,8 @@ export const Header = () => {
 
     const onClickHiddenUserList = () => {
         if (hiddenUserList) {
-            console.log(false)
             setHiddenUserList(false);
         } else {
-            console.log(true)
             setHiddenUserList(true);
         }
     }
@@ -91,8 +89,8 @@ export const Header = () => {
                                     className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
                                     <svg className={"w-4 h-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
                                          fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                         strokeWidth="1.5" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round"
                                               d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                                     </svg>
                                 </div>
@@ -103,8 +101,8 @@ export const Header = () => {
                                 style={{height: 49}}>
                                 <svg className={"w-6 text-gray-400"} xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                     strokeWidth="1.5" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round"
                                           d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
                                 </svg>
                             </div>
@@ -119,7 +117,7 @@ export const Header = () => {
                                             <div className="w-8 h-8 rounded-full overflow-hidden">
                                                 <img
                                                     className="object-cover w-full h-full"
-                                                    src={userData && userData.avatarUrl ? userData.avatarUrl : "/ui/profile/noAvatar.png"}
+                                                    src={userData.avatarUrl || "/ui/profile/noAvatar.png"}
                                                     alt="User avatar"
                                                 />
                                             </div>
@@ -127,8 +125,8 @@ export const Header = () => {
                                         <div className={"mx-2 flex-shrink-0"}>
                                             <svg className={"w-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
                                                  fill="none" viewBox="0 0 24 24"
-                                                 stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                 strokeWidth="1.5" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round"
                                                       d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
                                             </svg>
                                         </div>
