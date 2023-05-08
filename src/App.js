@@ -1,4 +1,3 @@
-import Container from "@mui/material/Container";
 import {Routes, Route} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import React from "react";
@@ -19,7 +18,7 @@ function App() {
         <>
             <Header/>
             <section className={"container"}>
-                <div className={"flex align-items-start pt-16 mx-auto"} style={{maxWidth: 1082}}>
+                <div className={"flex align-items-start pt-20 mx-auto"} style={{maxWidth: 1082}}>
                     {isAuth ? <SideMenu/> : ""}
                     <Routes>
                         <Route path="/" element={<Home />} />

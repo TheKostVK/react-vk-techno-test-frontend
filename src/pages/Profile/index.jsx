@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {selectIsAuth} from "../../redux/slices/auth";
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 
 import "./Profile.module.scss";
+import {AddPost, Post} from "../../components";
+import axios from "../../axios";
 
 
 export const Profile = () => {
@@ -12,6 +14,15 @@ export const Profile = () => {
     const userData = useSelector(state => state.auth.data);
     const [hiddenUserList, setHiddenUserList] = useState(true);
     const [buttonHiddenText, setButtonHiddenText] = useState("Показать подробную информацию");
+
+    const [posts, setPosts] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const [isPostsLoading, setIsPostsLoading] = useState(true);
+    const [isPostsFetching, setIsPostsFetching] = useState(false);
+    const [fetching, setFetching] = useState(false);
 
     const formattedDate = (userDataTime) => {
         const date = new Date(userDataTime);
@@ -37,6 +48,45 @@ export const Profile = () => {
         }
     }
 
+
+    useEffect(() => {
+        fetchDataPosts();
+    }, [fetching]);
+
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler);
+        return function () {
+            document.removeEventListener('scroll', scrollHandler);
+        }
+    }, []);
+
+    const scrollHandler = (e) => {
+        if (e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100 && !isPostsFetching) {
+            setFetching(true);
+        }
+    }
+
+    async function fetchDataPosts() {
+        try {
+            if (currentPage !== totalPages + 1) {
+                setIsPostsFetching(false);
+                axios.get(`/posts/user/${userData._id}/p?page=${currentPage}&perPage=6`).then(
+                    response => {
+                        setPosts([...posts, ...response.data.posts]);
+                        setTotalPages(response.data.pageInfo.totalPages);
+                        setCurrentPage((prevState) => prevState + 1);
+                    }
+                ).finally(() => {
+                    setFetching(false);
+                    setIsPostsFetching(false);
+                    setIsPostsLoading(false);
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if (!window.localStorage.getItem("token") && !isAuth) {
         return <Navigate to={"/login"}/>;
     }
@@ -47,7 +97,7 @@ export const Profile = () => {
                 {/*UserAvatar*/}
                 <div className={"bg-white rounded border p-3 pb-1.5 mb-4"}>
 
-                    <div className={"position-relative group"}>
+                    <div className={"position-relative mb-2 group"}>
                         <img
                             src={userData.avatarUrl || "%PUBLIC_URL%//ui/profile/noAvatar.png"}
                             alt={userData.userName}
@@ -72,8 +122,14 @@ export const Profile = () => {
 
                     <div>
                         <button type="button"
-                                className={"bg-gray-200 rounded-sm w-full my-2 py-1 text-gray-500 hover:text-gray-400"}>
+                                className={"focus:outline-none  bg-gray-200 rounded-sm w-full mb-2 py-1 text-gray-500 hover:text-gray-400"}>
                             Редактировать
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button"
+                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
+                            Добавить в друзья
                         </button>
                     </div>
                 </div>
@@ -291,12 +347,36 @@ export const Profile = () => {
                         </div>
                     </div>
                 </div>
+                {/*AddPost*/}
+                <AddPost sizeBlock={560} posts={posts} setPosts={setPosts}/>
+
                 {/*Feed*/}
-                <div className={"bg-white w-full rounded border pb-1.5 mb-4"}>
+                <div className={"bg-white w-full rounded border mb-4"}>
                     <div className={"p-3"}>
-                        UserFeed
+                        Search in user posts
                     </div>
                 </div>
+                {(isPostsLoading ? [...Array(1)] : posts).map((obj, index) =>
+                    isPostsLoading ? (
+                        <Post key={index} isLoading={true}/>
+                    ) : (
+                        <Post
+                            key={obj._id}
+                            id={obj._id}
+                            title={obj.title}
+                            text={obj.text}
+                            imageUrl={obj.imageUrl}
+                            user={obj.user}
+                            createdAt={obj.createdAt}
+                            viewsCount={obj.viewsCount}
+                            commentsCount={3}
+                            tags={obj.tags}
+                            isLoading={isPostsLoading}
+                            posts={posts}
+                            setPosts={setPosts}
+                            isEditable={obj.user._id === userData?._id}
+                        />
+                    ))}
             </div>
         </>
     );

@@ -1,0 +1,21 @@
+.show {
+  opacity: 1;
+  visibility: visible;
+
+  .modal {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  .modal {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -30%);
+    transition-delay: 0.2s;
+  }
+}

@@ -1,13 +1,13 @@
 import React, {useEffect, useState, useRef} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 import {Post} from "../../components/Post";
 import {Navigate} from "react-router-dom";
 import {selectIsAuth} from "../../redux/slices/auth";
 import axios from "../../axios";
+import {AddPost} from "../../components";
 
 export const Feed = () => {
-    const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
 
     const [posts, setPosts] = useState([]);
@@ -36,7 +36,7 @@ export const Feed = () => {
         try {
             if (currentPage !== totalPages + 1) {
                 setIsPostsFetching(false);
-                axios.get(`/posts/p?page=${currentPage}&perPage=3`).then(
+                axios.get(`/posts/p?page=${currentPage}&perPage=6`).then(
                     response => {
                         setPosts([...posts, ...response.data.posts]);
                         setTotalPages(response.data.pageInfo.totalPages);
@@ -82,6 +82,7 @@ export const Feed = () => {
             {/*  <TagsBlock items={tags.items} isLoading={isTagsLoading} />*/}
             {/*  <Index />*/}
             {/*</div>*/}
+            <AddPost sizeBlock={792} posts={posts} setPosts={setPosts}/>
             {(isPostsLoadingStart ? [...Array(1)] : posts).map((obj, index) =>
                 isPostsLoadingStart ? (
                     <Post key={index} isLoading={true}/>
@@ -98,6 +99,8 @@ export const Feed = () => {
                         commentsCount={3}
                         tags={obj.tags}
                         isLoading={isPostsLoadingStart}
+                        posts={posts}
+                        setPosts={setPosts}
                         isEditable={obj.user._id === userData?._id}
                     />
                 ))}

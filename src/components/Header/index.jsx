@@ -110,7 +110,7 @@ export const Header = () => {
                         {/*User*/}
                         {isAuth ?
                             (
-                                <button onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
+                                <button onClick={() => onClickHiddenUserList()} className={"position-relative h-full focus:outline-none"}>
                                     <div className={"flex align-items-center hover:bg-gray-100 h-12"}
                                          style={{height: 49}}>
                                         <div className={"mx-2"}>
