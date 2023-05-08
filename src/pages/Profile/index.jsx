@@ -91,7 +91,7 @@ export const Profile = () => {
                     <div className={"grid grid-cols-3 gap-3 p-3"}>
                         <div>
                             <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noavatar.png"} alt={"Аватар"}/>
+                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
                             </div>
                             <div className={"text-center text-truncate"}>
                                 <div className={"text-blue-900 hover:underline"}>
@@ -101,7 +101,7 @@ export const Profile = () => {
                         </div>
                         <div>
                             <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noavatar.png"} alt={"Аватар"}/>
+                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
                             </div>
                             <div className={"text-center text-truncate"}>
                                 <div className={"text-blue-900 hover:underline"}>
@@ -111,7 +111,7 @@ export const Profile = () => {
                         </div>
                         <div>
                             <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noavatar.png"} alt={"Аватар"}/>
+                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
                             </div>
                             <div className={"text-center text-truncate"}>
                                 <div className={"text-blue-900 hover:underline"}>
@@ -121,7 +121,7 @@ export const Profile = () => {
                         </div>
                         <div>
                             <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noavatar.png"} alt={"Аватар"}/>
+                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
                             </div>
                             <div className={"text-center text-truncate"}>
                                 <div className={"text-blue-900 hover:underline"}>
@@ -131,7 +131,7 @@ export const Profile = () => {
                         </div>
                         <div>
                             <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noavatar.png"} alt={"Аватар"}/>
+                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
                             </div>
                             <div className={"text-center text-truncate"}>
                                 <div className={"text-blue-900 hover:underline"}>

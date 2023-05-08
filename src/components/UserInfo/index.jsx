@@ -11,7 +11,7 @@ export const UserInfo = ({avatarUrl, userName, additionalText, children}) => {
                             <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                                 <img
                                     className="object-cover w-full h-full"
-                                    src={avatarUrl || "%PUBLIC_URL%//ui/profile/noAvatar.png"}
+                                    src={avatarUrl || "/ui/profile/noAvatar.png"}
                                     alt="User avatar"
                                 />
                             </div>
