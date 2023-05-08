@@ -33,12 +33,12 @@ export const FullPost = () => {
             setLoading(false);
         }).catch(err => {
             console.log(err);
-            alert("Ошибка при получении поста");
+            alert("Ошибка при получении записи");
         });
     }, [id]);
 
     const onClickRemove = () => {
-        if (window.confirm("Вы действительно хотите удалить статью?")) {
+        if (window.confirm("Вы действительно хотите удалить запись?")) {
             dispatch(fetchRemovePost(id));
         }
     };

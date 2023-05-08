@@ -110,7 +110,7 @@ export const Header = () => {
                         {/*User*/}
                         {isAuth ?
                             (
-                                <div onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
+                                <button onClick={() => onClickHiddenUserList()} className={"position-relative h-full"}>
                                     <div className={"flex align-items-center hover:bg-gray-100 h-12"}
                                          style={{height: 49}}>
                                         <div className={"mx-2"}>
@@ -135,10 +135,10 @@ export const Header = () => {
                                     <div className={`${!hiddenUserList ? 'show' : 'hidden'}`}>
                                         <div
                                             className={`absolute top-full right-0`}>
-                                            <div className={"bg-white border w-52 py-1 rounded"}>
+                                            <div className={"bg-white border w-56 py-1 rounded"}>
                                                 <Link to="/profile"
                                                       className={"flex align-items-center px-3 py-1 hover:bg-gray-100 text-decoration-none"}>
-                                                    <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
+                                                    <div className="w-12 h-12 rounded-full overflow-hidden mr-2">
                                                         <img
                                                             className="object-cover w-full h-full"
                                                             src={userData && userData.avatarUrl ? userData.avatarUrl : "/ui/profile/noAvatar.png"}
@@ -146,7 +146,7 @@ export const Header = () => {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <div className={"text-truncate overflow-hidden text-blue-900"}>
+                                                        <div className={"text-truncate overflow-hidden text-blue-900 text-xl"}>
                                                             {userData.userName}
                                                         </div>
                                                         <div className={"text-gray-500 text-xs"}>
@@ -163,7 +163,7 @@ export const Header = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </button>
                             ) : (
                                 <div className={"flex align-items-center rounded"}>
                                     <div className={"flex align-items-center font-medium hover:bg-gray-100"}

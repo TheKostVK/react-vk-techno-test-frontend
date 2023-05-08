@@ -35,10 +35,7 @@ export const Feed = () => {
     async function fetchDataPosts() {
         try {
             if (currentPage !== totalPages + 1) {
-                console.log(posts);
-                console.log(currentPage);
-                console.log(fetching);
-                setIsPostsFetching(true);
+                setIsPostsFetching(false);
                 axios.get(`/posts/p?page=${currentPage}&perPage=3`).then(
                     response => {
                         setPosts([...posts, ...response.data.posts]);
@@ -93,6 +90,7 @@ export const Feed = () => {
                         key={obj._id}
                         id={obj._id}
                         title={obj.title}
+                        text={obj.text}
                         imageUrl={obj.imageUrl}
                         user={obj.user}
                         createdAt={obj.createdAt}

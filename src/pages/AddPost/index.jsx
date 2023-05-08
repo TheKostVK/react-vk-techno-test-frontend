@@ -137,7 +137,7 @@ export const AddPost = () => {
                        variant="standard"
                        placeholder="Тэги"
                        fullWidth/>
-            <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options}/>
+            <SimpleMDE value={text} onChange={onChange} options={options}/>
             <div className={styles.buttons}>
                 <Button onClick={onSubmit} size="large" variant="contained">
                     {isEditing ? "Сохранить" : "Опубликовать"}
