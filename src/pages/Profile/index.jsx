@@ -49,7 +49,7 @@ export const Profile = () => {
 
                     <div className={"position-relative group"}>
                         <img
-                            src={userData.avatarUrl || "/ui/profile/noAvatar.png"}
+                            src={userData.avatarUrl || "%PUBLIC_URL%//ui/profile/noAvatar.png"}
                             alt={userData.userName}
                             className={"rounded-sm"}
                             style={{
