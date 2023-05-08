@@ -1,22 +1,67 @@
-import React from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {Post} from "../../components/Post";
-import {fetchPosts} from "../../redux/slices/posts";
 import {Navigate} from "react-router-dom";
 import {selectIsAuth} from "../../redux/slices/auth";
+import axios from "../../axios";
 
 export const Feed = () => {
     const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
-    const {posts} = useSelector(state => state.posts);
+
+    const [posts, setPosts] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
     const isAuth = useSelector(selectIsAuth);
 
-    const isPostsLoading = posts.status === "loading";
+    const [isPostsLoadingStart, setIsPostsLoadingStart] = useState(true);
+    const [isPostsFetching, setIsPostsFetching] = useState(false);
+    const [fetching, setFetching] = useState(false);
 
-    React.useEffect(() => {
-        dispatch(fetchPosts());
-    }, [dispatch]);
+    useEffect(() => {
+        fetchDataPosts();
+    }, [fetching]);
+
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler);
+        return function () {
+            document.removeEventListener('scroll', scrollHandler);
+        }
+    }, []);
+
+    async function fetchDataPosts() {
+        try {
+            if (currentPage !== totalPages + 1) {
+                console.log(posts);
+                console.log(currentPage);
+                console.log(fetching);
+                setIsPostsFetching(true);
+                axios.get(`/posts/p?page=${currentPage}&perPage=3`).then(
+                    response => {
+                        setPosts([...posts, ...response.data.posts]);
+                        setTotalPages(response.data.pageInfo.totalPages);
+                        setCurrentPage((prevState) => prevState + 1);
+                    }
+                ).finally(() => {
+                    setFetching(false);
+                    setIsPostsFetching(false);
+                    setIsPostsLoadingStart(false);
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    const scrollHandler = (e) => {
+        if (e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100 && !isPostsFetching) {
+            setFetching(true);
+        }
+    }
 
     if (!window.localStorage.getItem("token") && !isAuth) {
         return <Navigate to={"/login"}/>;
@@ -24,7 +69,7 @@ export const Feed = () => {
 
 
     return (
-        <div>
+        <div className={"w-full"}>
             {/*<Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">*/}
             {/*  <Tab label="Новые посты" />*/}
             {/*  <Tab label="Популярные посты" />*/}
@@ -40,26 +85,24 @@ export const Feed = () => {
             {/*  <TagsBlock items={tags.items} isLoading={isTagsLoading} />*/}
             {/*  <Index />*/}
             {/*</div>*/}
-            <div>
-                {(isPostsLoading ? [...Array(1)] : posts.items).map((obj, index) =>
-                    isPostsLoading ? (
-                        <Post key={index} isLoading={true}/>
-                    ) : (
-                        <Post
-                            key={obj._id}
-                            id={obj._id}
-                            title={obj.title}
-                            imageUrl={obj.imageUrl}
-                            user={obj.user}
-                            createdAt={obj.createdAt}
-                            viewsCount={obj.viewsCount}
-                            commentsCount={3}
-                            tags={obj.tags}
-                            isLoading={isPostsLoading}
-                            isEditable={obj.user._id === userData?._id}
-                        />
-                    ))}
-            </div>
+            {(isPostsLoadingStart ? [...Array(1)] : posts).map((obj, index) =>
+                isPostsLoadingStart ? (
+                    <Post key={index} isLoading={true}/>
+                ) : (
+                    <Post
+                        key={obj._id}
+                        id={obj._id}
+                        title={obj.title}
+                        imageUrl={obj.imageUrl}
+                        user={obj.user}
+                        createdAt={obj.createdAt}
+                        viewsCount={obj.viewsCount}
+                        commentsCount={3}
+                        tags={obj.tags}
+                        isLoading={isPostsLoadingStart}
+                        isEditable={obj.user._id === userData?._id}
+                    />
+                ))}
         </div>
     );
 };

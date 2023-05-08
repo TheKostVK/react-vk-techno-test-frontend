@@ -123,7 +123,7 @@ export const Header = () => {
                                             </div>
                                         </div>
                                         <div className={"mx-2 flex-shrink-0"}>
-                                            <svg className={"w-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
+                                            <svg className={"w-4 text-gray-500"} xmlns="http://www.w3.org/2000/svg"
                                                  fill="none" viewBox="0 0 24 24"
                                                  strokeWidth="1.5" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round"

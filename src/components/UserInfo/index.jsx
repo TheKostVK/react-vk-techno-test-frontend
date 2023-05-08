@@ -1,12 +1,12 @@
 import React from 'react';
 
-export const UserInfo = ({avatarUrl, userName, additionalText}) => {
+export const UserInfo = ({avatarUrl, userName, additionalText, children}) => {
 
     return (
         <>
-            <div className={"p-4"}>
-                <div className={"flex justify-content-between"}>
-                    <div className={"flex"}>
+            <div className={"py-4 px-2"}>
+                <div className={"flex justify-content-between align-items-center"}>
+                    <div className={"flex align-items-center"}>
                         <div className={"mx-2 flex align-items-center"}>
                             <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                                 <img
@@ -19,13 +19,13 @@ export const UserInfo = ({avatarUrl, userName, additionalText}) => {
 
                         <div className={"pl-2"}>
 
-                            <div className={"text-blue-900 hover:underline"}>
+                            <div className={"text-blue-900 hover:underline text-truncate overflow-hidden"}>
 
                                 {userName}
 
                             </div>
 
-                            <div className={"text-gray-500 hover:underline"}>
+                            <div className={"text-gray-500 text-sm"}>
 
                                 {additionalText}
 
@@ -33,6 +33,7 @@ export const UserInfo = ({avatarUrl, userName, additionalText}) => {
 
                         </div>
                     </div>
+                    {children}
                 </div>
             </div>
         </>

@@ -18,7 +18,7 @@ function App() {
     return (
         <>
             <Header/>
-            <section className={"container mx-auto"}>
+            <section className={"container"}>
                 <div className={"flex align-items-start pt-16 mx-auto"} style={{maxWidth: 1082}}>
                     {isAuth ? <SideMenu/> : ""}
                     <Routes>
