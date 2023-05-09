@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 
 
 import {UserInfo} from "../UserInfo";
@@ -135,7 +137,7 @@ export const Post = ({
                                 src={obj}
                                 alt={"img"}
                                 key={`img${id}${index}`}
-                                className={"rounded-sm mx-auto rounded"}
+                                className={"mx-auto rounded h-auto py-2"}
                                 style={{
                                     width: "auto",
                                     objectFit: "cover",
@@ -143,42 +145,6 @@ export const Post = ({
                                 }}
                             />
                         ))}
-                        {/*<div className={"py-2 grid grid-cols-3 flex"}>*/}
-                        {/*    <div className={"col-span-2"}>*/}
-                        {/*        <img*/}
-                        {/*            src={imageUrl}*/}
-                        {/*            alt={id}*/}
-                        {/*            className={"rounded-sm"}*/}
-                        {/*            style={{*/}
-                        {/*                width: "auto",*/}
-                        {/*                objectFit: "cover",*/}
-                        {/*                objectPosition: "center",*/}
-                        {/*            }}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*    <div>*/}
-                        {/*        <img*/}
-                        {/*            src={imageUrl}*/}
-                        {/*            alt={id}*/}
-                        {/*            className={"rounded-sm"}*/}
-                        {/*            style={{*/}
-                        {/*                width: "auto",*/}
-                        {/*                objectFit: "cover",*/}
-                        {/*                objectPosition: "center",*/}
-                        {/*            }}*/}
-                        {/*        />*/}
-                        {/*        <img*/}
-                        {/*            src={imageUrl}*/}
-                        {/*            alt={id}*/}
-                        {/*            className={"rounded-sm"}*/}
-                        {/*            style={{*/}
-                        {/*                width: "auto",*/}
-                        {/*                objectFit: "cover",*/}
-                        {/*                objectPosition: "center",*/}
-                        {/*            }}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
                 {/*FooterPost*/}

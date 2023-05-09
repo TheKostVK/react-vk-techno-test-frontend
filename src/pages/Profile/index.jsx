@@ -24,6 +24,12 @@ export const Profile = () => {
     const [isPostsFetching, setIsPostsFetching] = useState(false);
     const [fetching, setFetching] = useState(false);
 
+    const [search, setSearch] = useState('');
+
+    const searchHeader = (value) => {
+        setSearch(value);
+    }
+
     const formattedDate = (userDataTime) => {
         const date = new Date(userDataTime);
         const dateFormat = new Intl.DateTimeFormat('ru-RU', {
@@ -65,6 +71,10 @@ export const Profile = () => {
             setFetching(true);
         }
     }
+
+    const filteredItems = posts.filter((item) =>
+        item.text.toLowerCase().includes(search.toLowerCase()),
+    );
 
     async function fetchDataPosts() {
         try {
@@ -349,14 +359,26 @@ export const Profile = () => {
                 </div>
                 {/*AddPost*/}
                 <AddPost sizeBlock={560} posts={posts} setPosts={setPosts}/>
-
                 {/*Feed*/}
-                <div className={"bg-white w-full rounded border mb-4"}>
-                    <div className={"p-3"}>
-                        Search in user posts
+                <div className={"bg-white w-full rounded border mb-4 flex"}>
+                    <div className={"p-3 w-full"}>
+                        <div className={"position-relative w-full hidden md:grid"}>
+                            <input
+                                className={"w-full h-8 pr-4 pl-8 rounded-lg bg-gray-100 focus:outline-none placeholder-gray-500"}
+                                value={search} onChange={(e) => searchHeader(e.target.value)}
+                                type={"text"} placeholder={"Поиск по записям"}/>
+                            <div className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
+                                <svg className={"w-4 h-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 24 24"
+                                     strokeWidth="1.5" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {(isPostsLoading ? [...Array(1)] : posts).map((obj, index) =>
+                {(isPostsLoading ? [...Array(1)] : filteredItems).map((obj, index) =>
                     isPostsLoading ? (
                         <Post key={index} isLoading={true}/>
                     ) : (
