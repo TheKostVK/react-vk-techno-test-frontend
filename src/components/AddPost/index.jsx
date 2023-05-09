@@ -236,6 +236,7 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                     </div>
                 </div>
             </div>
+
         </>
     )
 }
