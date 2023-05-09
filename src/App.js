@@ -24,9 +24,9 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/feed" element={<Feed />} />
                         <Route path="/profile" element={<Profile/>}/>
-                        <Route path="/posts/:id" element={<FullPost/>}/>
-                        <Route path="/posts/:id/edit" element={<AddPost/>}/>
-                        <Route path="/add-post" element={<AddPost/>}/>
+                        {/*<Route path="/add-post" element={<AddPost/>}/>*/}
+                        {/*<Route path="/posts/:id/edit" element={<AddPost/>}/>*/}
+                        {/*<Route path="/posts/:id" element={<FullPost/>}/>*/}
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/registration" element={<Registration/>}/>
                     </Routes>

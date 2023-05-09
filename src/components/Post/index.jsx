@@ -132,7 +132,7 @@ export const Post = ({
                     <div className={"py-2 w-full"}>
                         {imageUrl && imageUrl.length > 0 && imageUrl[0] !== "" && imageUrl.map((obj, index) => (
                             <img
-                                src={imageUrl}
+                                src={obj}
                                 alt={"img"}
                                 key={`img${id}${index}`}
                                 className={"rounded-sm mx-auto rounded"}
