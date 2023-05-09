@@ -4,7 +4,9 @@ import {useSelector} from "react-redux";
 import {selectIsAuth} from "../../redux/slices/auth";
 
 import axios from "../../axios";
-import {useNavigate, useParams} from "react-router-dom";
+import styles from "../../pages/AddPost/AddPost.module.scss";
+import TextField from "@mui/material/TextField";
+import {fetchRemovePost} from "../../redux/slices/posts";
 
 
 export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
@@ -12,32 +14,45 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
     const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
 
+    const [textToScreen, setTextToScreen] = React.useState("");
     const [text, setText] = React.useState("");
     const [tags, setTags] = React.useState("");
-    const [imageUrl, setImageUrl] = React.useState("");
+    const [imageUrl, setImageUrl] = React.useState([]);
     const inputFileRef = React.useRef(null);
     const [hiddenBlock, setHiddenBlock] = useState(true);
 
-    const isEditing = false//;
+    const isEditing = false//
 
+    console.log(imageUrl)
+
+    function filterInput(input) {
+        // Заменяем теги скриптов на символы-заместители
+        input = input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, 'REMOVED_SCRIPTS');
+        // Удаляем все теги кроме p, br
+        input = input.replace(/<(?!\/?(p|br))\/?.*?>/gi, '');
+        return setText(input);
+    }
 
     const handleChangeFile = async (event) => {
         try {
-            const savePath = "posts/preview/"
+            const savePath = "posts/img/"
             const formData = new FormData();
             const file = event.target.files[0];
             formData.append("image", file);
             formData.append("savePath", savePath); // добавляем путь сохранения в форму
             const {data} = await axios.post("/upload", formData);
-            setImageUrl(data.url);
+            setImageUrl([data.url, ...imageUrl]);
         } catch (err) {
             console.warn(err);
             alert("Ошибка загрузки превью");
         }
     };
 
-    const onClickRemoveImage = () => {
-        setImageUrl("");
+    const onClickRemoveImage = (imgURLDel) => {
+        if (window.confirm("Вы действительно хотите удалить запись?")) {
+            const updatedPostsImg = imageUrl.filter(imgURL => imgURL !== imgURLDel);
+            setImageUrl(updatedPostsImg);
+        }
     };
 
     const onSubmit = async () => {
@@ -55,6 +70,7 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
 
             setHiddenBlock(true);
             setText("");
+            setTextToScreen("");
             setTags("");
             setImageUrl("");
 
@@ -67,7 +83,7 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
 
     return (
         <>
-            <div className={"bg-white w-full rounded border mb-4"}>
+            <div className={"bg-white w-full rounded border mb-4"} >
                     <div className={"flex"}>
                         <div className={"flex-shrink-0 py-3 px-3"}>
                             <img
@@ -76,43 +92,21 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                                 alt="User avatar"
                             />
                         </div>
-                        {/*<TextField className={"p-3 w-full h-full"}*/}
-                        {/*           value={tags}*/}
-                        {/*           onChange={e => setTags(e.target.value)}*/}
-                        {/*           variant="standard"*/}
-                        {/*           placeholder="Тэги"*/}
-                        {/*           rows={1} // Указываем начальное количество строк*/}
-                        {/*           minRows={4} // Задаем минимальное количество строк*/}
-                        {/*           fullWidth*/}
-                        {/*/>*/}
-                        {/*<TextField className={"p-3 w-full h-full"}*/}
-                        {/*           value={text}*/}
-                        {/*           onChange={e => setText(e.target.value)}*/}
-                        {/*           variant="standard"*/}
-                        {/*           placeholder="Что у вас нового?"*/}
-                        {/*           multiline={true} // Создаем многострочное поле ввода*/}
-                        {/*           rows={1} // Указываем начальное количество строк*/}
-                        {/*           minRows={4} // Задаем минимальное количество строк*/}
-                        {/*           style={{*/}
-                        {/*               height: "auto",*/}
-                        {/*               maxHeight: "none"*/}
-                        {/*           }} // Указываем автоматически определить высоту и не ограничивать ее*/}
-                        {/*           fullWidth*/}
-                        {/*/>*/}
                         <div className={"flex-1"}>
                             <div className={"position-relative w-full h-full"}>
-                                <div className={`position-absolute top-4 top-4 text-gray-500 ${hiddenBlock ? 'show' : 'hidden'}`}
-                                style={{zIndex: 1, pointerEvents: "none"}}>
-                                    Что у вас нового?
-                                </div>
-                                <div className={"w-full h-full py-3 focus:outline-none"}
-                                     style={{zIndex: 2, maxWidth: `${sizeBlock}px`}}
-                                     contentEditable={true}
-                                     value={text}
-                                     onFocus={() => setHiddenBlock(false)}
-                                     onBlur={(e) => {
-                                         setText(e.target.innerText)
-                                     }}
+                                <TextField
+                                    className={"w-full h-full py-3 focus:outline-none"}
+                                    style={{zIndex: 2, maxWidth: `${sizeBlock}px`}}
+                                    onFocus={() => setHiddenBlock(false)}
+                                    variant="standard"
+                                    multiline={true}
+                                    placeholder="Что у вас нового?"
+                                    value={textToScreen}
+                                    onChange={(e) => {
+                                        setTextToScreen(e.target.value);
+                                        filterInput(e.target.value);
+                                    }}
+                                    fullWidth
                                 />
                             </div>
                         </div>
@@ -130,9 +124,62 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                         </div>
                     </div>
                 <div className={`pt-2 ${!hiddenBlock ? 'show' : 'hidden'}`}>
+                    {/*<div className={"flex"}>*/}
+                    {/*    <TextField className={"pb-3 px-3 mx-auto"}*/}
+                    {/*               style={{zIndex: 2, maxWidth: `${sizeBlock}px`}}*/}
+                    {/*               value={tags}*/}
+                    {/*               onChange={e => setTags(e.target.value)}*/}
+                    {/*               variant="standard"*/}
+                    {/*               size="small"*/}
+                    {/*               placeholder="#"*/}
+                    {/*               fullWidth*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    <div className={"h-px mx-3 bg-gray-200 pb-0"}/>
+                    <div className={"flex flex-shrink-0 w-full w-16 mx-3 my-4"}>
+                        {
+                            Array.isArray(imageUrl) && imageUrl.length > 0 && imageUrl[0] !== "" &&
+                            imageUrl.map((obj, index) => (
+                                <div key={`imgCreate${index}`} className={"flex mr-2"}>
+                                    <button onClick={() => onClickRemoveImage(obj)}>
+                                        <svg className={"w-6 h-6"}
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             strokeWidth="1.5" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round"
+                                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+                                        </svg>
+                                    </button>
+                                    <img
+                                        src={obj}
+                                        alt={"img"}
+                                        className={"rounded-sm rounded"}
+                                        style={{
+                                            width: "auto",
+                                            objectFit: "cover",
+                                            objectPosition: "center",
+                                        }}
+                                    />
+                                </div>
+                            ))
+                        }
+                    </div>
                     <div className={"h-px mx-3 bg-gray-200 pb-0"}/>
                     <div className={"flex p-3 justify-content-between"}>
-                        <button className={`focus:outline-none`} aria-label={"Фотография"} data-balloon-pos={"up-right"}>
+                        {/*{imageUrl ? (*/}
+                        {/*    <>*/}
+                        {/*        <img className={styles.image} src={imageUrl} alt="Uploaded"/>*/}
+                        {/*        <Button variant="contained" color="error" onClick={onClickRemoveImage}>*/}
+                        {/*            Удалить превью*/}
+                        {/*        </Button>*/}
+                        {/*    </>*/}
+                        {/*) : (*/}
+                        {/*    <>*/}
+                        {/*        <Button onClick={() => inputFileRef.current.click()} variant="outlined" size="large">*/}
+                        {/*            Загрузить превью*/}
+                        {/*        </Button>*/}
+                        {/*    </>*/}
+                        {/*)}*/}
+                        <button className={`focus:outline-none`} onClick={() => inputFileRef.current.click()} aria-label={"Фотография"} data-balloon-pos={"up-right"}>
                             <svg className={"w-6 h-6 text-gray-400 hover:text-gray-500"}
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                                  stroke="currentColor">
@@ -142,6 +189,7 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                                       d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
                             </svg>
                         </button>
+                        <input ref={inputFileRef} type="file" onChange={handleChangeFile} hidden/>
                         <button className={`focus:outline-none border rounded px-3.5 py-1.5 bg-blue-600 bg-opacity-75 text-white`}
                             onClick={onSubmit}
                         >
