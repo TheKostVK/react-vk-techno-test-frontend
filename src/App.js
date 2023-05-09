@@ -2,7 +2,7 @@ import {Routes, Route} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import React from "react";
 import {Footer, Header} from "./components";
-import {Home, Feed, SideMenu, FullPost, Registration, AddPost, Login, Profile} from "./pages";
+import {Home, Feed, SideMenu, FullPost, Registration, AddPost, Login, Profile, Friends} from "./pages";
 import {fetchAuthMe, selectIsAuth} from "./redux/slices/auth";
 
 function App() {
@@ -24,6 +24,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/feed" element={<Feed />} />
                         <Route path="/profile" element={<Profile/>}/>
+                        <Route path="/friends" element={<Friends/>}/>
                         {/*<Route path="/add-post" element={<AddPost/>}/>*/}
                         {/*<Route path="/posts/:id/edit" element={<AddPost/>}/>*/}
                         {/*<Route path="/posts/:id" element={<FullPost/>}/>*/}

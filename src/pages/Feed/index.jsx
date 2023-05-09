@@ -33,6 +33,10 @@ export const Feed = () => {
         }
     }, []);
 
+    if (!window.localStorage.getItem("token") && !isAuth) {
+        return <Navigate to={"/login"}/>;
+    }
+
     async function fetchDataPosts() {
         try {
             if (currentPage !== totalPages + 1) {
