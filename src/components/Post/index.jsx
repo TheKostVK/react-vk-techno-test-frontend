@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {UserInfo} from "../UserInfo";
 import {PostSkeleton} from "./Skeleton";
 import {fetchRemovePost} from "../../redux/slices/posts";
-import ReactMarkdown from "react-markdown";
 
 export const Post = ({
                          id,
@@ -29,6 +28,7 @@ export const Post = ({
     const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
     const [hiddenUserList, setHiddenUserList] = useState(true);
+    const [fullText, setFullText] = useState(false);
 
     if (isLoading) {
         return <PostSkeleton/>;
@@ -118,7 +118,16 @@ export const Post = ({
                         </ul>
                     </div>
                     <div>
-                        <ReactMarkdown children={text}/>
+                        {text.length > 1000 && !fullText ? (
+                            <>
+                                {text.slice(0, 1000)}
+                                <button onClick={() => setFullText(true)} className={"text-center text-blue-900"}>
+                                    ... Показать полностью
+                                </button>
+                            </>
+                        ) : (
+                            text
+                        )}
                     </div>
                     <div className={"py-2 w-full"}>
                         {imageUrl && imageUrl.length > 0 && imageUrl[0] !== "" && imageUrl.map((obj, index) => (

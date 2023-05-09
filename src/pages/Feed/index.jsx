@@ -21,6 +21,7 @@ export const Feed = () => {
     const [isPostsFetching, setIsPostsFetching] = useState(false);
     const [fetching, setFetching] = useState(false);
 
+
     useEffect(() => {
         fetchDataPosts();
     }, [fetching]);
