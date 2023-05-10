@@ -103,11 +103,8 @@ export const Profile = ({search, setSearch}) => {
         const year = date.getFullYear();
         const month = months[date.getMonth()];
         const day = date.getDate();
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
 
-        const formattedDate = `${day} ${month} ${year} в ${hours}:${minutes}:${seconds}`;
+        const formattedDate = `${day} ${month} ${year}`;
         return formattedDate;
     }
 
@@ -285,7 +282,7 @@ export const Profile = ({search, setSearch}) => {
                             </div>
                             <div className={"col-span-2"}>
                                 <div>
-                                    30 июня 2003 г.
+                                    {formatDate(userProfile.wasBorn)}
                                 </div>
                             </div>
 
@@ -344,12 +341,9 @@ export const Profile = ({search, setSearch}) => {
                                 </div>
                                 <div className={"col-span-2"}>
                                     <div>
-                                        .....
+                                        {userProfile.university || "Информация отсутствует"}
                                     </div>
                                     <div>
-                                        .....
-                                    </div>
-                                    <div className={"text-gray-500"}>
                                         Информация отсутствует
                                     </div>
                                 </div>

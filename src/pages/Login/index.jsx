@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {Navigate} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 
 import styles from "./Login.module.scss";
 import {fetchAuth, selectIsAuth} from "../../redux/slices/auth";
@@ -47,6 +47,7 @@ export const Login = () => {
                 <TextField
                     className={styles.field}
                     label="E-Mail"
+                    auto-complete="email"
                     error={Boolean(errors.email?.message)}
                     helperText={errors.email?.message}
                     {...register('email', {required: 'Укажите почту'})}
@@ -55,6 +56,7 @@ export const Login = () => {
                 <TextField className={styles.field}
                            label="Пароль"
                            type="password"
+                           auto-complete="current-password"
                            error={Boolean(errors.password?.message)}
                            helperText={errors.password?.message}
                            {...register('password', {required: 'Укажите пароль'})}
@@ -63,6 +65,14 @@ export const Login = () => {
                     Войти
                 </Button>
             </form>
+            <div className={"flex pt-2"}>
+                <div>
+                    Нет аккаунта?
+                </div>
+                <Link to={"/registration"} className={"text-blue-500 mx-2"}>
+                    Создать
+                </Link>
+            </div>
         </Paper>
     );
 };

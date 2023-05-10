@@ -185,20 +185,6 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                     </div>
                     <div className={`h-px mx-3 bg-gray-200 pb-0 ${Array.isArray(imageUrl) && imageUrl.length > 0 && imageUrl[0] !== "" ? 'show' : 'hidden'}`}/>
                     <div className={"flex p-3 justify-content-between"}>
-                        {/*{imageUrl ? (*/}
-                        {/*    <>*/}
-                        {/*        <img className={styles.image} src={imageUrl} alt="Uploaded"/>*/}
-                        {/*        <Button variant="contained" color="error" onClick={onClickRemoveImage}>*/}
-                        {/*            Удалить превью*/}
-                        {/*        </Button>*/}
-                        {/*    </>*/}
-                        {/*) : (*/}
-                        {/*    <>*/}
-                        {/*        <Button onClick={() => inputFileRef.current.click()} variant="outlined" size="large">*/}
-                        {/*            Загрузить превью*/}
-                        {/*        </Button>*/}
-                        {/*    </>*/}
-                        {/*)}*/}
                         <input ref={inputFileRef} type="file" onChange={handleChangeFile} hidden/>
                         <button className={`focus:outline-none`} onClick={() => inputFileRef.current.click()} aria-label={imageLoading ? `Идет выгрузка, пожалуйста подождите` : `Фотография`} data-balloon-pos={imageLoading ? `up-left` : `up`}>
                             <svg className={`w-6 h-6 text-gray-400 hover:text-gray-500 ${!imageLoading ? 'show' : 'hidden'}`}
@@ -231,7 +217,6 @@ export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
                     </div>
                 </div>
             </div>
-
         </>
     )
 }
