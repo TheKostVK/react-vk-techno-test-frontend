@@ -1,24 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 
 
 import {UserInfo} from "../UserInfo";
 import {PostSkeleton} from "./Skeleton";
 import {fetchRemovePost} from "../../redux/slices/posts";
+import axios from "../../axios";
 
 export const Post = ({
                          id,
-                         title,
                          createdAt,
                          text,
                          imageUrl,
                          user,
                          viewsCount = 0,
-                         isLike = false,
-                         commentsCount,
+                         commentsCount = 0,
+                         likesCount = 0,
+                         likes = [],
                          tags,
                          children,
                          isFullPost,
@@ -29,6 +28,8 @@ export const Post = ({
                      }) => {
     const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
+    const [isLike, setIsLike] = useState(likes.includes(userData?._id));
+    const [countLike, setCountLike] = useState(likesCount);
     const [hiddenUserList, setHiddenUserList] = useState(true);
     const [fullText, setFullText] = useState(false);
 
@@ -52,6 +53,24 @@ export const Post = ({
         }
     };
 
+    const onClickLike = async (id) => {
+        try {
+            if (isLike) {
+                await axios.post(`/posts/${id}/removeLike/${userData._id}`);
+                setCountLike((prevState) => prevState - 1);
+                setIsLike(false);
+            } else {
+                await axios.post(`/posts/${id}/addLike/${userData._id}`);
+                setCountLike((prevState) => prevState + 1);
+                setIsLike(true);
+            }
+        } catch (err) {
+            console.warn(err);
+            alert("Ошибка likePost");
+        }
+    };
+
+
     const formattedDate = (userDataTime) => {
         const date = new Date(userDataTime);
         const dateFormat = new Intl.DateTimeFormat('ru-RU', {
@@ -65,6 +84,7 @@ export const Post = ({
 
         return dateFormat.format(date);
     }
+
     return (
         <div className={"bg-white rounded border mb-4"}>
             <div className={"p-4"}>
@@ -83,7 +103,7 @@ export const Post = ({
                             <div className={"position-relative"}>
 
                                 <div className={"bg-white border border-gray-300 w-36 py-1 rounded shadow-sm"}>
-                                    {user._id === userData._id &&
+                                    {user?._id === userData?._id &&
                                         <>
                                             <button onClick={() => onClickRemove(id)}
                                                     className={"w-full text-center py-1 text-blue-900"}>
@@ -150,32 +170,17 @@ export const Post = ({
                 {/*FooterPost*/}
                 <div className={"h-px bg-gray-200 pb-0"}/>
                 <div className={"flex align-items-center justify-content-between bottom-0"}>
-                    <button className={"px-2 pt-2"}>
-                        {isLike ? (
-                            <div className={"flex align-items-center text-red-400"}>
-                                <svg className={"w-6 h-6"}
-                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
-                                </svg>
-                                <div>
-                                    12
-                                </div>
+                    <button className={"px-2 pt-2"} onClick={() => onClickLike(id)}>
+                        <div className={`flex align-items-center ${isLike ? "text-red-400" : "text-gray-400"}`}>
+                            <svg className={"w-6 h-6"}
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
+                            </svg>
+                            <div>
+                                {countLike}
                             </div>
-                        ) : (
-                            <div className={"flex align-items-center text-gray-400"}>
-                                <svg className={"w-6 h-6 mr-1.5"}
-                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     strokeWidth="1.5"
-                                     stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round"
-                                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
-                                </svg>
-                                <div>
-                                    12
-                                </div>
-                            </div>
-                        )}
+                        </div>
                     </button>
                     <div className={"flex align-items-center px-2 pt-2 text-gray-400"}>
                         <svg className={"w-6 h-6 mr-1.5"}

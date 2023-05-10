@@ -7,6 +7,8 @@ import App from "./App";
 import "./index.scss";
 
 import store from './redux/store.js';
+import {DevSupport} from "@react-buddy/ide-toolbox";
+import {ComponentPreviews, useInitial} from "./dev";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -15,7 +17,11 @@ root.render(
     <>
         <BrowserRouter>
             <Provider store={store}>
-                <App/>
+                <DevSupport ComponentPreviews={ComponentPreviews}
+                            useInitialHook={useInitial}
+                >
+                    <App/>
+                </DevSupport>
             </Provider>
         </BrowserRouter>
     </>

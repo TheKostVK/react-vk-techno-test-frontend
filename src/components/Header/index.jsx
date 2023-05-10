@@ -136,7 +136,7 @@ export const Header = () => {
                                         <div
                                             className={`absolute top-full right-0`}>
                                             <div className={"bg-white border w-56 py-1 rounded"}>
-                                                <Link to="/profile"
+                                                <Link to={`/profile/${userData?._id}`}
                                                       className={"flex align-items-center px-3 py-1 hover:bg-gray-100 text-decoration-none"}>
                                                     <div className="w-12 h-12 rounded-full overflow-hidden mr-2">
                                                         <img

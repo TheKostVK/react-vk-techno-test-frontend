@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 
 import {selectIsAuth} from "../../redux/slices/auth";
 import {useSelector} from "react-redux";
-import {Navigate} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 
 import "./Profile.module.scss";
 import {AddPost, Post} from "../../components";
@@ -10,6 +10,7 @@ import axios from "../../axios";
 
 
 export const Profile = () => {
+    const {id} = useParams();
     const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
     const [hiddenUserList, setHiddenUserList] = useState(true);
@@ -385,15 +386,15 @@ export const Profile = () => {
                         <Post
                             key={obj._id}
                             id={obj._id}
-                            title={obj.title}
                             text={obj.text}
                             imageUrl={obj.imageUrl}
                             user={obj.user}
                             createdAt={obj.createdAt}
                             viewsCount={obj.viewsCount}
+                            likesCount={obj.likesCount}
+                            likes={obj.likes}
                             commentsCount={3}
                             tags={obj.tags}
-                            isLoading={isPostsLoading}
                             posts={posts}
                             setPosts={setPosts}
                             isEditable={obj.user._id === userData?._id}

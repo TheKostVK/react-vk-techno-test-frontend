@@ -101,6 +101,8 @@ export const Feed = () => {
                         user={obj.user}
                         createdAt={obj.createdAt}
                         viewsCount={obj.viewsCount}
+                        likesCount={obj.likesCount}
+                        likes={obj.likes}
                         commentsCount={3}
                         tags={obj.tags}
                         isLoading={isPostsLoadingStart}

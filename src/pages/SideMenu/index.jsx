@@ -1,13 +1,16 @@
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 export const SideMenu = () => {
+    const userData = useSelector(state => state.auth.data);
+
     return (
         <>
             <div className={"hidden md:grid flex-shrink-0 justify-content-center mr-2"} style={{width: 160}}>
 
                 <ul className={"-ml-2"} style={{width: 160, marginRight: 2}}>
                     <li className={"mb-1"}>
-                        <Link to="/profile" className={"flex px-2 py-1 rounded hover:bg-gray-200 align-items-center"}>
+                        <Link to={`/profile/${userData?._id}`} className={"flex px-2 py-1 rounded hover:bg-gray-200 align-items-center"}>
                             <div className={"mr-2 "}>
                                 <svg className={"w-4 text-blue-500"}
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
