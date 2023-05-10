@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
-import {selectIsAuth} from "../../redux/slices/auth";
-import {useSelector} from "react-redux";
+import {fetchAuthMe, selectIsAuth} from "../../redux/slices/auth";
+import {useSelector, useDispatch} from "react-redux";
 import {Navigate, useParams, Link} from "react-router-dom";
 
 import "./Profile.module.scss";
@@ -12,6 +12,7 @@ import axios from "../../axios";
 export const Profile = () => {
     const {id} = useParams();
     const isAuth = useSelector(selectIsAuth);
+    const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
     const [userProfile, setUserProfile] = useState([]);
 
@@ -29,9 +30,14 @@ export const Profile = () => {
     const [isPostsLoading, setIsPostsLoading] = useState(true);
     const [isPostsFetching, setIsPostsFetching] = useState(false);
     const [fetching, setFetching] = useState(false);
+    const [load, setLoad] = useState(false);
 
     const [search, setSearch] = useState('');
 
+    useEffect(() => {
+        dispatch(fetchAuthMe());
+        setLoad(true);
+    }, [dispatch]);
 
     useEffect(() => {
         setPosts([]);
@@ -39,7 +45,7 @@ export const Profile = () => {
         setPostCountClientServer(1);
         setFetching(true);
         fetchUserProfile(id, userData?.friends);
-    }, [id]);
+    }, [id, load]);
 
     useEffect(() => {
         fetchDataPosts(id);
@@ -51,6 +57,7 @@ export const Profile = () => {
             setIsFriend(userData.friends && userData.friends.includes(userProfile._id));
         }
     }, [userData, userProfile]);
+
 
     const fetchUserProfile = async (id, friends) => {
         try {
@@ -128,6 +135,15 @@ export const Profile = () => {
     const filteredItems = posts.filter((item) =>
         item.text.toLowerCase().includes(search.toLowerCase()),
     );
+
+    if (!userData) {
+        // Если данные пользователя еще не загрузились, можно вернуть заглушку или отобразить загрузчик
+        return (
+            <div className="flex items-center justify-center">
+                <div className="w-6 h-6 border-4 border-t-4 border-gray-200 rounded-full animate-spin"></div>
+            </div>
+        );
+    }
 
     async function fetchDataPosts(id) {
         try {

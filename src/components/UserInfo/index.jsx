@@ -1,7 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
+import axios from "../../axios";
 
-export const UserInfo = ({_id, avatarUrl, userName, additionalText, children}) => {
+export const UserInfo = ({userId, _id, avatarUrl, userName, additionalText, children}) => {
+    const [userProfile, setUserProfile] = useState([]);
+
+    useEffect(() => {
+        fetchUserProfile(userId);
+    }, [userId]);
+
+    const fetchUserProfile = async (userId) => {
+        try {
+            const {data} = await axios.get(`/profile/${userId}`);
+            setUserProfile(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -11,7 +26,7 @@ export const UserInfo = ({_id, avatarUrl, userName, additionalText, children}) =
                         <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                             <img
                                 className="object-cover w-full h-full"
-                                src={avatarUrl || "/ui/profile/noAvatar.png"}
+                                src={avatarUrl || userProfile.avatarUrl  || "/ui/profile/noAvatar.png"}
                                 alt="User avatar"
                             />
                         </div>
@@ -19,9 +34,9 @@ export const UserInfo = ({_id, avatarUrl, userName, additionalText, children}) =
 
                     <div className={"pl-2"}>
 
-                        <Link to={`/profile/${_id}`} className={"text-blue-900 hover:underline text-truncate overflow-hidden"}>
+                        <Link to={`/profile/${_id || userProfile._id}`} className={"text-blue-900 hover:underline text-truncate overflow-hidden"}>
 
-                            {userName}
+                            {userName || userProfile.userName}
 
                         </Link>
 

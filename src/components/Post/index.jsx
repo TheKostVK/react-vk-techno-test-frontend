@@ -118,7 +118,7 @@ export const Post = ({
                                             <div className={"h-px bg-gray-200"}/>
                                         </>
                                     }
-                                    <Link className={"w-full"}>
+                                    <Link to={`/profile/${user?._id}`} className={"w-full"}>
                                         <div className={"py-1 text-center text-blue-900 text-truncate"}>
                                             Автор поста
                                         </div>
