@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 
 import {selectIsAuth} from "../../redux/slices/auth";
 import {useSelector} from "react-redux";
-import {Navigate, useParams} from "react-router-dom";
+import {Navigate, useParams, Link} from "react-router-dom";
 
 import "./Profile.module.scss";
 import {AddPost, Post} from "../../components";
@@ -13,13 +13,18 @@ export const Profile = () => {
     const {id} = useParams();
     const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
+    const [userProfile, setUserProfile] = useState([]);
+
+    const [isFriend, setIsFriend] = useState(false);
+    const [countFriend, setCountFriend] = useState(0);
+
     const [hiddenUserList, setHiddenUserList] = useState(true);
     const [buttonHiddenText, setButtonHiddenText] = useState("Показать подробную информацию");
 
     const [posts, setPosts] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [postCountClientServer, setPostCountClientServer] = useState(0);
 
     const [isPostsLoading, setIsPostsLoading] = useState(true);
     const [isPostsFetching, setIsPostsFetching] = useState(false);
@@ -27,23 +32,75 @@ export const Profile = () => {
 
     const [search, setSearch] = useState('');
 
+
+    useEffect(() => {
+        setPosts([]);
+        setCurrentPage(1);
+        setPostCountClientServer(1);
+        setFetching(true);
+        fetchUserProfile(id, userData?.friends);
+    }, [id]);
+
+    useEffect(() => {
+        fetchDataPosts(id);
+    }, [fetching]);
+
+    useEffect(() => {
+        if (userData && userProfile) {
+            setCountFriend(userProfile?.friends?.length);
+            setIsFriend(userData.friends && userData.friends.includes(userProfile._id));
+        }
+    }, [userData, userProfile]);
+
+    const fetchUserProfile = async (id, friends) => {
+        try {
+            setIsFriend(friends && friends.includes(id));
+            const {data} = await axios.get(`/profile/${id}`);
+            setUserProfile(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const searchHeader = (value) => {
         setSearch(value);
     }
 
-    const formattedDate = (userDataTime) => {
-        const date = new Date(userDataTime);
-        const dateFormat = new Intl.DateTimeFormat('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
-        });
-
-        return dateFormat.format(date);
+    const onClickAddFriend = async (userId, friendId) => {
+        try {
+            await axios.post(`/profile/${userId}/addFriend/${friendId}`);
+            setIsFriend(true);
+        } catch (err) {
+            alert("Не удалось добавить в друзья")
+        }
     }
+
+    const onClickRemoveFriend = async (userId, friendId) => {
+        try {
+            await axios.post(`/profile/${userId}/removeFriend/${friendId}`);
+            setIsFriend(false);
+        } catch (err) {
+            alert("Не удалось удалить из друзей")
+        }
+    }
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const months = [
+            'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+            'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+        ];
+        const year = date.getFullYear();
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        const formattedDate = `${day} ${month} ${year} в ${hours}:${minutes}:${seconds}`;
+        return formattedDate;
+    }
+
 
     const onClickHiddenUserList = () => {
         if (hiddenUserList) {
@@ -54,11 +111,6 @@ export const Profile = () => {
             setHiddenUserList(true);
         }
     }
-
-
-    useEffect(() => {
-        fetchDataPosts();
-    }, [fetching]);
 
     useEffect(() => {
         document.addEventListener('scroll', scrollHandler);
@@ -77,14 +129,14 @@ export const Profile = () => {
         item.text.toLowerCase().includes(search.toLowerCase()),
     );
 
-    async function fetchDataPosts() {
+    async function fetchDataPosts(id) {
         try {
-            if (currentPage !== totalPages + 1) {
-                setIsPostsFetching(false);
-                axios.get(`/posts/user/${userData._id}/p?page=${currentPage}&perPage=6`).then(
+            if (postCountClientServer !== posts.length) {
+                setFetching(false);
+                axios.get(`/posts/user/${id}/p?page=${currentPage}&perPage=6`).then(
                     response => {
                         setPosts([...posts, ...response.data.posts]);
-                        setTotalPages(response.data.pageInfo.totalPages);
+                        setPostCountClientServer(response.data.pageInfo.totalPosts);
                         setCurrentPage((prevState) => prevState + 1);
                     }
                 ).finally(() => {
@@ -110,8 +162,8 @@ export const Profile = () => {
 
                     <div className={"position-relative mb-2 group"}>
                         <img
-                            src={userData.avatarUrl || "%PUBLIC_URL%//ui/profile/noAvatar.png"}
-                            alt={userData.userName}
+                            src={userProfile?.avatarUrl || "/ui/profile/noAvatarBig.png"}
+                            alt={userProfile?.userName}
                             className={"rounded-sm"}
                             style={{
                                 width: "auto",
@@ -130,30 +182,57 @@ export const Profile = () => {
                             </button>
                         </div>
                     </div>
+                    <div>
+                        {
+                            userData?._id === userProfile?._id && (
+                                <button
+                                    type="button"
+                                    className={"focus:outline-none  bg-gray-200 rounded-sm w-full mb-2 py-1 text-gray-500 hover:text-gray-400"}>
+                                    Редактировать
+                                </button>
+                            )
+                        }
+                        {userData?._id !== userProfile?._id &&
+                            (isFriend ?
 
-                    <div>
-                        <button type="button"
-                                className={"focus:outline-none  bg-gray-200 rounded-sm w-full mb-2 py-1 text-gray-500 hover:text-gray-400"}>
-                            Редактировать
-                        </button>
-                    </div>
-                    <div>
-                        <button type="button"
-                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
-                            Добавить в друзья
-                        </button>
+                                    (
+                                        <button onClick={() => onClickRemoveFriend(userData?._id, userProfile?._id)}
+                                                type="button"
+                                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
+                                            Удалить из друзей
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => onClickAddFriend(userData?._id, userProfile?._id)}
+                                                type="button"
+                                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
+                                            Добавить в друзья
+                                        </button>
+                                    )
+                            )
+                        }
                     </div>
                 </div>
 
                 {/*Friends*/}
                 <div className={"bg-white rounded border mb-4"}>
                     <div className={"flex justify-content-between align-items-center"}>
-                        <div className={"px-3 pt-2"}>
-                            Друзья
-                            <span className={"text-gray-500 pl-2"}>
-                                52
+                        {userData?._id === userProfile?._id ?
+                            (
+                                <Link to={"/friend"} className={"px-3 pt-2"}>
+                                    Друзья
+                                    <span className={"text-gray-500 pl-2"}>
+                                {countFriend}
                             </span>
-                        </div>
+                                </Link>
+                            ) : (
+                                <div to={"/friend"} className={"px-3 pt-2"}>
+                                    Друзья
+                                    <span className={"text-gray-500 pl-2"}>
+                                {countFriend}
+                            </span>
+                                </div>
+                            )
+                        }
                     </div>
                     <div className={"grid grid-cols-3 gap-3 p-3"}>
                         <div>
@@ -215,14 +294,14 @@ export const Profile = () => {
                 {/*UserInfo*/}
                 <div className={"bg-white w-full rounded border pb-1.5 mb-4"}>
                     <div className={"px-3 pt-3"}>
-                       <div className={"flex justify-content-between align-items-center"}>
-                           <div className={"text-xl"}>
-                               {userData.userName}
-                           </div>
-                           <div className={"text-gray-500"}>
-                               online
-                           </div>
-                       </div>
+                        <div className={"flex justify-content-between align-items-center"}>
+                            <div className={"text-xl"}>
+                                {userProfile?.userName}
+                            </div>
+                            <div className={"text-gray-500"}>
+                                online
+                            </div>
+                        </div>
                         <div className={"px-3 h-px bg-gray-200 my-2"}/>
                     </div>
                     <div className={"px-3 pb-3 space-y-2"}>
@@ -240,7 +319,8 @@ export const Profile = () => {
 
                         </div>
 
-                        <button onClick={() => onClickHiddenUserList()} className={"grid grid-cols-3 gap-2 hover:bg-gray-100 w-full py-2 rounded focus:outline-none text-blue-900 text-left"}>
+                        <button onClick={() => onClickHiddenUserList()}
+                                className={"grid grid-cols-3 gap-2 hover:bg-gray-100 w-full py-2 rounded focus:outline-none text-blue-900 text-left"}>
                             <div>
 
                             </div>
@@ -265,16 +345,10 @@ export const Profile = () => {
                                     <div className={"text-gray-500"}>
                                         Электронная почта
                                     </div>
-                                    <div className={"text-gray-500"}>
-                                        Дата регистрации
-                                    </div>
                                 </div>
                                 <div className={"col-span-2"}>
                                     <div>
-                                        {userData.email}
-                                    </div>
-                                    <div>
-                                        {formattedDate(userData.createdAt)}
+                                        {userProfile?.email}
                                     </div>
                                 </div>
                             </div>
@@ -323,16 +397,10 @@ export const Profile = () => {
                                     <div className={"text-gray-500"}>
                                         Дата регистрации
                                     </div>
-                                    <div className={"text-gray-500"}>
-                                        Дата обновления
-                                    </div>
                                 </div>
                                 <div className={"col-span-2"}>
                                     <div>
-                                        {formattedDate(userData.createdAt)}
-                                    </div>
-                                    <div>
-                                        {formattedDate(userData.updatedAt)}
+                                        {formatDate(userProfile?.createdAt)}
                                     </div>
                                 </div>
                             </div>
@@ -342,15 +410,15 @@ export const Profile = () => {
                     <div className={"flex justify-content-center align-items-center border-t"}>
                         <div className={"block p-3 text-center"}>
                             <div className={"text-blue-900 text-xl"}>
-                                56
+                                {countFriend}
                             </div>
                             <div className={"text-gray-500"}>
-                                Друга
+                                Друзья
                             </div>
                         </div>
                         <div className={"block p-3 text-center"}>
                             <div className={"text-blue-900 text-xl"}>
-                                10
+                                {postCountClientServer}
                             </div>
                             <div className={"text-gray-500"}>
                                 Постов
@@ -359,7 +427,9 @@ export const Profile = () => {
                     </div>
                 </div>
                 {/*AddPost*/}
-                <AddPost sizeBlock={560} posts={posts} setPosts={setPosts}/>
+                {
+                    userData?._id === userProfile?._id && <AddPost sizeBlock={560} posts={posts} setPosts={setPosts}/>
+                }
                 {/*Feed*/}
                 <div className={"bg-white w-full rounded border mb-4 flex"}>
                     <div className={"p-3 w-full"}>
@@ -368,7 +438,8 @@ export const Profile = () => {
                                 className={"w-full h-8 pr-4 pl-8 rounded-lg bg-gray-100 focus:outline-none placeholder-gray-500"}
                                 value={search} onChange={(e) => searchHeader(e.target.value)}
                                 type={"text"} placeholder={"Поиск по записям"}/>
-                            <div className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
+                            <div
+                                className={"absolute top-0 left-0 h-full w-8 flex justify-content-center align-items-center"}>
                                 <svg className={"w-4 h-4 text-gray-400"} xmlns="http://www.w3.org/2000/svg"
                                      fill="none" viewBox="0 0 24 24"
                                      strokeWidth="1.5" stroke="currentColor">
@@ -397,7 +468,7 @@ export const Profile = () => {
                             tags={obj.tags}
                             posts={posts}
                             setPosts={setPosts}
-                            isEditable={obj.user._id === userData?._id}
+                            isEditable={obj.user._id === id}
                         />
                     ))}
             </div>

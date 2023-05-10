@@ -2,7 +2,7 @@ import {Routes, Route} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import React from "react";
 import {Footer, Header} from "./components";
-import {Home, Feed, SideMenu, FullPost, Registration, AddPost, Login, Profile, Friends} from "./pages";
+import {Home, Feed, SideMenu, Registration, Login, Profile, Friends} from "./pages";
 import {fetchAuthMe, selectIsAuth} from "./redux/slices/auth";
 
 function App() {

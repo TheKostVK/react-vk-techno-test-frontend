@@ -1,6 +1,7 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
-export const UserInfo = ({avatarUrl, userName, additionalText, children}) => {
+export const UserInfo = ({_id, avatarUrl, userName, additionalText, children}) => {
 
     return (
         <>
@@ -18,11 +19,11 @@ export const UserInfo = ({avatarUrl, userName, additionalText, children}) => {
 
                     <div className={"pl-2"}>
 
-                        <div className={"text-blue-900 hover:underline text-truncate overflow-hidden"}>
+                        <Link to={`/profile/${_id}`} className={"text-blue-900 hover:underline text-truncate overflow-hidden"}>
 
                             {userName}
 
-                        </div>
+                        </Link>
 
                         <div className={"text-gray-500 text-sm"}>
 

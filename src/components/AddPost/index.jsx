@@ -1,16 +1,13 @@
 import React, {useState} from "react";
 
 import {useSelector} from "react-redux";
-import {selectIsAuth} from "../../redux/slices/auth";
 
 import axios from "../../axios";
-import styles from "../../pages/AddPost/AddPost.module.scss";
 import TextField from "@mui/material/TextField";
 
 
 export const AddPost = ({sizeBlock = 560, posts, setPosts}) => {
 
-    const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
 
     const [textToScreen, setTextToScreen] = React.useState("");

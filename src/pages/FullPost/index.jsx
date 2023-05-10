@@ -10,7 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 import styles from "./FullPost.module.scss";
-import {Post, AddComment, CommentsBlock, SideBlock} from "../../components/";
+import {Post, SideBlock} from "../../components/";
 import Button from "@mui/material/Button";
 import ReactMarkdown from "react-markdown";
 import {fetchRemovePost} from "../../redux/slices/posts";

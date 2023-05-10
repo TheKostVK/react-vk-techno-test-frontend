@@ -1,4 +1,4 @@
-import {Link, Navigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import React from "react";
 import {useSelector} from "react-redux";
 import {selectIsAuth} from "../../redux/slices/auth";
@@ -8,6 +8,8 @@ import {UserInfo} from "../../components";
 export const Friends = () => {
 
     const isAuth = useSelector(selectIsAuth);
+
+    const userData = useSelector(state => state.auth.data);
 
     if (!window.localStorage.getItem("token") && !isAuth) {
         return <Navigate to={"/login"}/>;
