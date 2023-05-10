@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {Navigate, useParams, Link} from "react-router-dom";
 
 import "./Profile.module.scss";
-import {AddPost, Post} from "../../components";
+import {AddPost, Post, UserInfo} from "../../components";
 import axios from "../../axios";
 
 
@@ -135,7 +135,7 @@ export const Profile = ({search, setSearch}) => {
         }
     }
 
-    if (!userData) {
+    if (!userData && !userProfile) {
         // Если данные пользователя еще не загрузились, можно вернуть заглушку или отобразить загрузчик
         return (
             <div className="flex items-center justify-center">
@@ -231,16 +231,16 @@ export const Profile = ({search, setSearch}) => {
                 {/*Friends*/}
                 <div className={"bg-white rounded border mb-4"}>
                     <div className={"flex justify-content-between align-items-center"}>
-                        {userData?._id === userProfile?._id ?
+                        {userData && userProfile && userData?._id === userProfile?._id ?
                             (
-                                <Link to={"/friend"} className={"px-3 pt-2"}>
+                                <Link to={"/friends"} className={"px-3 py-2"}>
                                     Друзья
                                     <span className={"text-gray-500 pl-2"}>
-                                {countFriend}
-                            </span>
+                                        {countFriend}
+                                    </span>
                                 </Link>
                             ) : (
-                                <div to={"/friend"} className={"px-3 pt-2"}>
+                                <div className={"px-3 py-2"}>
                                     Друзья
                                     <span className={"text-gray-500 pl-2"}>
                                 {countFriend}
@@ -249,57 +249,14 @@ export const Profile = ({search, setSearch}) => {
                             )
                         }
                     </div>
-                    <div className={"grid grid-cols-3 gap-3 p-3"}>
-                        <div>
-                            <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
-                            </div>
-                            <div className={"text-center text-truncate"}>
-                                <div className={"text-blue-900 hover:underline"}>
-                                    Name1
+                    <div>
+                        {
+                            userData && userProfile.friends && userProfile?.friends.map((friend, index) => (
+                                <div key={`friendListItem${index}`} className={"p-2"}>
+                                    <UserInfo userId={friend}/>
                                 </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
-                            </div>
-                            <div className={"text-center text-truncate"}>
-                                <div className={"text-blue-900 hover:underline"}>
-                                    Name2
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
-                            </div>
-                            <div className={"text-center text-truncate"}>
-                                <div className={"text-blue-900 hover:underline"}>
-                                    Name3
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
-                            </div>
-                            <div className={"text-center text-truncate"}>
-                                <div className={"text-blue-900 hover:underline"}>
-                                    Name4
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={"px-1"}>
-                                <img className={"rounded-full"} src={"/ui/profile/noAvatar.png"} alt={"Аватар"}/>
-                            </div>
-                            <div className={"text-center text-truncate"}>
-                                <div className={"text-blue-900 hover:underline"}>
-                                    Name5
-                                </div>
-                            </div>
-                        </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>
