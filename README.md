@@ -1,13 +1,9 @@
 # react-vk-techno-test-frontend
 Техническое задание на стажировку в ВК 2023
-
+<p>Выполнил: <a href="https://github.com/TheKostVK">TheKostVK</a></p>
 
 
 ![image](https://github.com/TheKostVK/react-vk-techno-test-frontend/assets/77970227/0683028b-37ef-4fbb-b68f-15a87a39512d)
-
-
-<p>Выполнил: <a href="https://github.com/TheKostVK">TheKostVK</a></p>
-</div>
 
 <p align="center">Ссылки на проекты GitHub</p>
 <table align="center">
