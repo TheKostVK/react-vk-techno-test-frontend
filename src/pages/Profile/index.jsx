@@ -9,7 +9,7 @@ import {AddPost, Post} from "../../components";
 import axios from "../../axios";
 
 
-export const Profile = () => {
+export const Profile = ({search, setSearch}) => {
     const {id} = useParams();
     const isAuth = useSelector(selectIsAuth);
     const dispatch = useDispatch();
@@ -25,14 +25,12 @@ export const Profile = () => {
     const [posts, setPosts] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postCountClientServer, setPostCountClientServer] = useState(0);
+    const [postCountServer, setPostCountServer] = useState(0);
 
     const [isPostsLoading, setIsPostsLoading] = useState(true);
     const [isPostsFetching, setIsPostsFetching] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [load, setLoad] = useState(false);
-
-    const [search, setSearch] = useState('');
 
     useEffect(() => {
         dispatch(fetchAuthMe());
@@ -42,7 +40,7 @@ export const Profile = () => {
     useEffect(() => {
         setPosts([]);
         setCurrentPage(1);
-        setPostCountClientServer(1);
+        setPostCountServer(1);
         setFetching(true);
         fetchUserProfile(id, userData?.friends);
     }, [id, load]);
@@ -72,6 +70,11 @@ export const Profile = () => {
     const searchHeader = (value) => {
         setSearch(value);
     }
+
+    const filteredItems = posts.filter((item) =>
+        item.text.toLowerCase().includes(search.toLowerCase()) ||
+        item.user.userName.toLowerCase().includes(search.toLowerCase())
+    );
 
     const onClickAddFriend = async (userId, friendId) => {
         try {
@@ -132,10 +135,6 @@ export const Profile = () => {
         }
     }
 
-    const filteredItems = posts.filter((item) =>
-        item.text.toLowerCase().includes(search.toLowerCase()),
-    );
-
     if (!userData) {
         // Если данные пользователя еще не загрузились, можно вернуть заглушку или отобразить загрузчик
         return (
@@ -147,12 +146,12 @@ export const Profile = () => {
 
     async function fetchDataPosts(id) {
         try {
-            if (postCountClientServer !== posts.length) {
+            if (postCountServer !== posts.length) {
                 setFetching(false);
                 axios.get(`/posts/user/${id}/p?page=${currentPage}&perPage=6`).then(
                     response => {
                         setPosts([...posts, ...response.data.posts]);
-                        setPostCountClientServer(response.data.pageInfo.totalPosts);
+                        setPostCountServer(response.data.pageInfo.totalPosts);
                         setCurrentPage((prevState) => prevState + 1);
                     }
                 ).finally(() => {
@@ -434,7 +433,7 @@ export const Profile = () => {
                         </div>
                         <div className={"block p-3 text-center"}>
                             <div className={"text-blue-900 text-xl"}>
-                                {postCountClientServer}
+                                {postCountServer}
                             </div>
                             <div className={"text-gray-500"}>
                                 Постов

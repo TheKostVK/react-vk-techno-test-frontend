@@ -11,8 +11,10 @@ export const UserInfo = ({userId, _id, avatarUrl, userName, additionalText, chil
 
     const fetchUserProfile = async (userId) => {
         try {
-            const {data} = await axios.get(`/profile/${userId}`);
-            setUserProfile(data);
+            if (userId) {
+                const {data} = await axios.get(`/profile/${userId}`);
+                setUserProfile(data);
+            }
         } catch (error) {
             console.log(error);
         }

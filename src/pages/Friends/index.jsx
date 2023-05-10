@@ -6,7 +6,7 @@ import {UserInfo} from "../../components";
 import axios from "../../axios";
 
 
-export const Friends = () => {
+export const Friends = ({search, setSearch}) => {
 
     const isAuth = useSelector(selectIsAuth);
     const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import {Routes, Route} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import React from "react";
+import React, {useState} from "react";
 import {Footer, Header} from "./components";
 import {Home, Feed, SideMenu, Registration, Login, Profile, Friends} from "./pages";
 import {fetchAuthMe, selectIsAuth} from "./redux/slices/auth";
@@ -8,6 +8,8 @@ import {fetchAuthMe, selectIsAuth} from "./redux/slices/auth";
 function App() {
     const dispatch = useDispatch();
     const isAuth = useSelector(selectIsAuth);
+
+    const [search, setSearch] = useState('');
 
     // if (!userData) {
     //     // Если данные пользователя еще не загрузились, можно вернуть заглушку или отобразить загрузчик
@@ -25,15 +27,15 @@ function App() {
 
     return (
         <>
-            <Header/>
+            <Header search={search} setSearch={setSearch}/>
             <section className={"container"}>
                 <div className={"flex align-items-start pt-20 mx-auto"} style={{maxWidth: 1082}}>
                     {isAuth ? <SideMenu/> : ""}
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/feed" element={<Feed />} />
-                        <Route path="/profile/:id" element={<Profile/>}/>
-                        <Route path="/friends" element={<Friends/>}/>
+                        <Route path="/feed" element={<Feed search={search} setSearch={setSearch}/>} />
+                        <Route path="/profile/:id" element={<Profile search={search} setSearch={setSearch}/>}/>
+                        <Route path="/friends" element={<Friends search={search} setSearch={setSearch}/>}/>
                         {/*<Route path="/add-post" element={<AddPost/>}/>*/}
                         {/*<Route path="/posts/:id/edit" element={<AddPost/>}/>*/}
                         {/*<Route path="/posts/:id" element={<FullPost/>}/>*/}

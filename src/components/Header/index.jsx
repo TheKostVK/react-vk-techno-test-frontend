@@ -7,12 +7,11 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout, selectIsAuth} from "../../redux/slices/auth";
 
-export const Header = () => {
+export const Header = ({search, setSearch}) => {
     const dispatch = useDispatch();
     const isAuth = useSelector(selectIsAuth);
     const userData = useSelector(state => state.auth.data);
 
-    const [search, setSearch] = useState('');
     const [hiddenUserList, setHiddenUserList] = useState(true);
 
     const searchHeader = (value) => {
