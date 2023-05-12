@@ -240,8 +240,8 @@ export const Profile = ({search, setSearch}) => {
                                 <div className={"px-3 py-2"}>
                                     Друзья
                                     <span className={"text-gray-500 pl-2"}>
-                                {countFriend}
-                            </span>
+                                        {countFriend}
+                                    </span>
                                 </div>
                             )
                         }

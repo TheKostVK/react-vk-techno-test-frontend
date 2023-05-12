@@ -38,7 +38,7 @@ export const Friends = ({search, setSearch}) => {
     }
 
     return (
-        <div className={"bg-white h-full w-full rounded border mb-4"}>
+        <div className={"w-full bg-white rounded border mb-4 mx-auto"}>
             <div className={"p-4"}>
                 <div className={"flex text-xl px-2"}>
                     <div>
@@ -55,11 +55,13 @@ export const Friends = ({search, setSearch}) => {
                             <div key={`friendListItem${index}`}>
                                 <div className={"py-2"}>
                                     <UserInfo userId={friend}>
-                                        <button onClick={() => onClickRemoveFriend(userData?._id, friend)} className={"pr-2"} aria-label={`Удалить из друзей`} data-balloon-pos={`up`}>
+                                        <button onClick={() => onClickRemoveFriend(userData?._id, friend)} className={"pr-2"} >
                                             <svg className={"w-6 h-6 text-gray-500 hover:text-red-500"}
-                                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
+                                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 strokeWidth="1.5"
                                                  stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                                <path strokeLinecap="round" strokeLinejoin="round"
+                                                      d="M6 18L18 6M6 6l12 12"/>
                                             </svg>
                                         </button>
                                     </UserInfo>
