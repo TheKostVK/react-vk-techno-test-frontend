@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
+import "./Post.module.scss"
 
 import {UserInfo} from "../UserInfo";
 import {PostSkeleton} from "./Skeleton";
@@ -15,21 +16,18 @@ export const Post = ({
                          imageUrl,
                          user,
                          viewsCount = 0,
-                         commentsCount = 0,
                          likesCount = 0,
                          likes = [],
                          tags,
-                         children,
-                         isFullPost,
                          isLoading,
                          posts,
                          setPosts,
-                         isEditable
                      }) => {
     const dispatch = useDispatch();
     const userData = useSelector(state => state.auth.data);
     const [isLike, setIsLike] = useState(likes.includes(userData?._id));
     const [countLike, setCountLike] = useState(likesCount);
+    const [selectedImage, setSelectedImage] = useState("");
     const [hiddenUserList, setHiddenUserList] = useState(true);
     const [fullText, setFullText] = useState(false);
 
@@ -83,13 +81,25 @@ export const Post = ({
         });
 
         return dateFormat.format(date);
-    }
+    };
+
+
+    const openImageModal = (imageUrl) => {
+        setSelectedImage(imageUrl);
+        // При открытии модального окна
+        document.documentElement.style.overflow = 'hidden';
+    };
+
+    const closeImageModal = () => {
+        setSelectedImage("");
+        // При закрытии модального окна
+        document.documentElement.style.overflow = '';
+    };
 
     return (
         <div className={"bg-white rounded border mb-4"}>
-            <div className={"p-4"}>
+            <div className={"p-3"}>
                 {/*UserInfo*/}
-
                 <UserInfo {...user} additionalText={formattedDate(createdAt)}>
                     <div className={"position-relative"}>
                         <button onClick={() => onClickHiddenUserList()} className={"pr-2"}>
@@ -151,21 +161,63 @@ export const Post = ({
                             text
                         )}
                     </div>
-                    <div className={"py-2 w-full"}>
-                        {imageUrl && imageUrl.length > 0 && imageUrl[0] !== "" && imageUrl.map((obj, index) => (
-                            <img
-                                src={obj}
-                                alt={"img"}
-                                key={`img${id}${index}`}
-                                className={"mx-auto rounded h-auto py-2"}
-                                style={{
-                                    width: "auto",
-                                    objectFit: "cover",
-                                    objectPosition: "center",
-                                }}
-                            />
-                        ))}
+                    <div className={`flex flex-shrink-0 my-4 flex-wrap`}>
+                        {
+                            Array.isArray(imageUrl) && imageUrl[0] !== "" ? (
+                                imageUrl.length === 1 ? (
+                                    imageUrl.map((obj, index) => (
+                                        <img
+                                            key={`imgPostId${id}${index}`}
+                                            src={obj}
+                                            alt="img"
+                                            className="w-auto h-auto rounded mx-auto my-1"
+                                            style={{
+                                                objectFit: "cover",
+                                                objectPosition: "center",
+                                            }}
+                                            onClick={() => openImageModal(obj)}
+                                        />
+                                    ))
+                                ) : (
+                                    imageUrl.length > 1 && imageUrl[0] !== "" && imageUrl.map((obj, index) => (
+                                        <img
+                                            key={`imgPostId${id}${index}`}
+                                            src={obj}
+                                            alt="img"
+                                            className="w-64 h-36 rounded mx-auto my-1"
+                                            style={{
+                                                objectFit: "cover",
+                                                objectPosition: "center",
+                                            }}
+                                            onClick={() => openImageModal(obj)}
+                                        />
+                                    ))
+                                )
+                            ) : null
+                        }
+
                     </div>
+                    {/* Модальное окно для просмотра картинки */}
+                    {selectedImage && (
+                        <div
+                            className="fixed px-3 top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"
+                            style={{zIndex: 2}}>
+                            <div className="max-w-6xl max-h-full">
+                                <img
+                                    src={selectedImage}
+                                    alt="img"
+                                    className="image-modal__image"
+                                    style={{maxHeight: '80vh'}}
+                                />
+                            </div>
+                            <button
+                                onClick={closeImageModal}
+                                className="absolute top-12 right-4 text-white text-3xl"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    )}
                 </div>
                 {/*FooterPost*/}
                 <div className={"h-px bg-gray-200 pb-0"}/>

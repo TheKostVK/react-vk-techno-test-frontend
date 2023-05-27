@@ -132,14 +132,6 @@ export const Profile = ({search, setSearch}) => {
         }
     }
 
-    if (!userData && !userProfile) {
-        // Если данные пользователя еще не загрузились, можно вернуть заглушку или отобразить загрузчик
-        return (
-            <div className="flex items-center justify-center">
-                <div className="w-6 h-6 border-4 border-t-4 border-gray-200 rounded-full animate-spin"></div>
-            </div>
-        );
-    }
 
     async function fetchDataPosts(id) {
         try {
@@ -168,128 +160,57 @@ export const Profile = ({search, setSearch}) => {
 
     return (
         <>
-            <div className={"w-56 mr-2 flex-shrink-0"}>
-                {/*UserAvatar*/}
-                <div className={"bg-white rounded border p-3 pb-1.5 mb-4"}>
-
-                    <div className={"position-relative mb-2 group"}>
-                        <img
-                            src={userProfile?.avatarUrl || "/ui/profile/noAvatarBig.png"}
-                            alt={userProfile?.userName}
-                            className={"rounded-sm"}
-                            style={{
-                                width: "auto",
-                                height: "210px",
-                                objectFit: "cover",
-                                objectPosition: "center",
-                            }}
-                        />
-                        <div className={"position-absolute top-0 right-0"}>
-                            <button className={"bg-black text-white rounded-tr rounded-bl focus:outline-none"}>
-                                <svg className={"w-6"}
-                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     strokeWidth="1.5" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        {
-                            userData?._id === userProfile?._id && (
-                                <button
-                                    type="button"
-                                    className={"focus:outline-none  bg-gray-200 rounded-sm w-full mb-2 py-1 text-gray-500 hover:text-gray-400"}>
-                                    Редактировать
-                                </button>
-                            )
-                        }
-                        {userData?._id !== userProfile?._id &&
-                            (isFriend ?
-
-                                    (
-                                        <button onClick={() => onClickRemoveFriend(userData?._id, userProfile?._id)}
-                                                type="button"
-                                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
-                                            Удалить из друзей
-                                        </button>
-                                    ) : (
-                                        <button onClick={() => onClickAddFriend(userData?._id, userProfile?._id)}
-                                                type="button"
-                                                className={"focus:outline-none rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
-                                            Добавить в друзья
-                                        </button>
-                                    )
-                            )
-                        }
-                    </div>
-                </div>
-
-                {/*Friends*/}
-                <div className={"bg-white rounded border mb-4"}>
-                    <div className={"flex justify-content-between align-items-center"}>
-                        {userData && userProfile && userData?._id === userProfile?._id ?
-                            (
-                                <Link to={"/friends"} className={"px-3 py-2"}>
-                                    Друзья
-                                    <span className={"text-gray-500 pl-2"}>
-                                        {countFriend}
-                                    </span>
-                                </Link>
-                            ) : (
-                                <div className={"px-3 py-2"}>
-                                    Друзья
-                                    <span className={"text-gray-500 pl-2"}>
-                                        {countFriend}
-                                    </span>
-                                </div>
-                            )
-                        }
-                    </div>
-                    <div>
-                        {
-                            userData && userProfile.friends && userProfile?.friends.map((friend, index) => (
-                                <div key={`friendListItem${index}`} className={"p-2"}>
-                                    <UserInfo userId={friend}/>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
-            </div>
-
-
             <div className={"flex-1 w-full"}>
-                {/*UserInfo*/}
-                <div className={"bg-white w-full rounded border pb-1.5 mb-4"}>
-                    <div className={"px-3 pt-3"}>
-                        <div className={"flex justify-content-between align-items-center"}>
-                            <div className={"text-xl"}>
+                <div className={"bg-white rounded border px-4 pt-4 mb-4"}>
+                    <div className={"flex flex-col justify-center sm:flex-row sm:justify-between"}>
+                        <div className={"flex items-center mb-2"}>
+                            <img
+                                src={userProfile?.avatarUrl || "/ui/profile/noAvatarBig.png"}
+                                alt={userProfile?.userName}
+                                className={"rounded-circle"}
+                                style={{
+                                    width: "110px",
+                                    height: "110px",
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                }}
+                            />
+                            <div className={"text-xl ml-4 mt-14"}>
                                 {userProfile?.userName}
                             </div>
-                            <div className={"text-gray-500"}>
-                                online
-                            </div>
                         </div>
-                        <div className={"px-3 h-px bg-gray-200 my-2"}/>
+                        <div className={"lg:mt-14"}>
+                            {
+                                userData?._id === userProfile?._id && (
+                                    <button
+                                        type="button"
+                                        className={"focus:outline-none px-2 bg-gray-200 rounded-sm w-full mb-2 py-1 text-gray-500 hover:text-gray-400"}>
+                                        Редактировать
+                                    </button>
+                                )
+                            }
+                            {userData?._id !== userProfile?._id &&
+                                (isFriend ?
+                                        (
+                                            <button onClick={() => onClickRemoveFriend(userData?._id, userProfile?._id)}
+                                                    type="button"
+                                                    className={"focus:outline-none px-2 rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
+                                                Удалить из друзей
+                                            </button>
+                                        ) : (
+                                            <button onClick={() => onClickAddFriend(userData?._id, userProfile?._id)}
+                                                    type="button"
+                                                    className={"focus:outline-none px-2 rounded-sm w-full py-1 bg-blue-600 bg-opacity-75 text-white"}>
+                                                Добавить в друзья
+                                            </button>
+                                        )
+                                )
+                            }
+                        </div>
                     </div>
-                    <div className={"px-3 pb-3 space-y-2"}>
-                        <div className={"grid grid-cols-3 gap-2"}>
-                            <div>
-                                <div className={"text-gray-500"}>
-                                    День рождения:
-                                </div>
-                            </div>
-                            <div className={"col-span-2"}>
-                                <div>
-                                    {formatDate(userProfile.wasBorn)}
-                                </div>
-                            </div>
 
-                        </div>
-
-                        <button onClick={() => onClickHiddenUserList()}
-                                className={"grid grid-cols-3 gap-2 hover:bg-gray-100 w-full py-2 rounded focus:outline-none text-blue-900 text-left"}>
+                    <div className={"mt-2 pt-2 pb-2 space-y-2 border-t border-b"}>
+                        <button onClick={() => onClickHiddenUserList()} className={"text-center hover:bg-gray-100 w-full py-2 rounded focus:outline-none text-blue-900 text-left"}>
                             <div>
 
                             </div>
@@ -299,10 +220,9 @@ export const Profile = ({search, setSearch}) => {
                         </button>
 
                         <div className={`${!hiddenUserList ? 'show' : 'hidden'}`}>
-
                             <div className={`flex my-2 align-items-center mt-3`}>
                                 <div>
-                                    Контактная информация
+                                    Личная информация
                                 </div>
                                 <div className={"flex-1"}>
                                     <div className={"h-px ml-3 bg-gray-200"}></div>
@@ -312,14 +232,15 @@ export const Profile = ({search, setSearch}) => {
                             <div className={"grid grid-cols-3 gap-2"}>
                                 <div>
                                     <div className={"text-gray-500"}>
-                                        Электронная почта
+                                        День рождения:
                                     </div>
                                 </div>
                                 <div className={"col-span-2"}>
                                     <div>
-                                        {userProfile?.email}
+                                        {formatDate(userProfile.wasBorn)}
                                     </div>
                                 </div>
+
                             </div>
 
                             <div className={`flex my-2 align-items-center mt-3`}>
@@ -349,6 +270,27 @@ export const Profile = ({search, setSearch}) => {
                                 </div>
                             </div>
 
+                            <div className={`flex my-2 align-items-center mt-3`}>
+                                <div>
+                                    Контактная информация
+                                </div>
+                                <div className={"flex-1"}>
+                                    <div className={"h-px ml-3 bg-gray-200"}></div>
+                                </div>
+                            </div>
+
+                            <div className={"grid grid-cols-3 gap-2"}>
+                                <div>
+                                    <div className={"text-gray-500"}>
+                                        Электронная почта
+                                    </div>
+                                </div>
+                                <div className={"col-span-2"}>
+                                    <div>
+                                        {userProfile?.email}
+                                    </div>
+                                </div>
+                            </div>
 
                             <div className={`flex my-2 align-items-center mt-3`}>
                                 <div>
@@ -373,7 +315,7 @@ export const Profile = ({search, setSearch}) => {
                         </div>
                     </div>
                     {/*AllInfo*/}
-                    <div className={"flex justify-content-center align-items-center border-t"}>
+                    <div className={"flex justify-content-center align-items-center"}>
                         <div className={"block p-3 text-center"}>
                             <div className={"text-blue-900 text-xl"}>
                                 {countFriend}
@@ -390,6 +332,38 @@ export const Profile = ({search, setSearch}) => {
                                 Постов
                             </div>
                         </div>
+                    </div>
+                </div>
+                {/*UserAvatar*/}
+                <div className={"bg-white rounded border p-3 pb-1.5 mb-4"}>
+                    {/*Friends*/}
+                    <div className={"flex justify-content-between align-items-center"}>
+                        {userData && userProfile && userData?._id === userProfile?._id ?
+                            (
+                                <Link to={"/friends"} className={"px-3 py-2"}>
+                                    Друзья
+                                    <span className={"text-gray-500 pl-2"}>
+                                        {countFriend}
+                                    </span>
+                                </Link>
+                            ) : (
+                                <div className={"px-3 py-2"}>
+                                    Друзья
+                                    <span className={"text-gray-500 pl-2"}>
+                                        {countFriend}
+                                    </span>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className={"flex-wrap"}>
+                        {
+                            userData && userProfile.friends && userProfile?.friends.map((friend, index) => (
+                                <div key={`friendListItem${index}`} className={"p-2"}>
+                                    <UserInfo userId={friend}/>
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
                 {/*AddPost*/}
