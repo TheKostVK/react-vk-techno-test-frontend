@@ -35,3 +35,11 @@ header {
   right: 0;
   z-index: 9999; /* только если есть другие элементы с более высоким z-index */
 }
+
+.headerMob {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999; /* только если есть другие элементы с более высоким z-index */
+}

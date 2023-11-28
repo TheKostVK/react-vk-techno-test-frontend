@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 
 import {Post} from "../../components/Post";
-import {Link, Navigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {selectIsAuth} from "../../redux/slices/auth";
 import axios from "../../axios";
 import {AddPost} from "../../components";
